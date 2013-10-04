@@ -15,7 +15,7 @@ class ShellCommandCommand(SH.TextCommand):
             self.default_prompt = default_prompt
         self.data_key = 'ShellCommand'
 
-    def run(self, edit, command='', command_prefix=None, prompt=None, region=False, arg_required=False, panel=False, title=None, syntax=None, refresh=False):
+    def run(self, edit, command=None, command_prefix=None, prompt=None, region=False, arg_required=False, panel=False, title=None, syntax=None, refresh=False):
 
         # If regions should be used then work them out, and append
         # them to the command:
@@ -42,19 +42,19 @@ class ShellCommandCommand(SH.TextCommand):
         # If no command is specified then we prompt for one, otherwise
         # we can just execute the command:
         #
-        if command.strip() == '':
+        if command is None:
             if prompt is None:
                 prompt = self.default_prompt
             self.view.window().show_input_panel(prompt, '', _C, None, None)
         else:
             _C(command)
 
-    def run_shell_command(self, command, panel=False, title=None, syntax=None, refresh=False):
+    def run_shell_command(self, command=None, panel=False, title=None, syntax=None, refresh=False):
 
         view = self.view
         window = view.window()
 
-        if command.strip() == '':
+        if command is None:
             SH.error_message('No command provided.')
             return
 
