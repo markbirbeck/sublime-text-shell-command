@@ -213,3 +213,9 @@ If we then have two further shell commands -- one that creates a new file, and o
   },
 ]
 ```
+
+# Changelog
+
+2013-10-04 (v0.1.0)
+
+* Initial release.
