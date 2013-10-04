@@ -19,7 +19,7 @@ def error_message(*args, **kwargs):
 
 class TextCommand(sublime_plugin.TextCommand):
 
-    def get_selection(self, view=None):
+    def get_region(self, view=None):
         '''Get the value under the cursor, or cursors.'''
 
         value = ''

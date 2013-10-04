@@ -4,13 +4,13 @@ from . import OsShell
 
 class OsCommandCommand(SH.TextCommand):
 
-    def run(self, edit, command='', prompt=None, selections=False, arg_required=False, panel=False, title=None):
+    def run(self, edit, command='', prompt=None, region=False, arg_required=False, panel=False, title=None):
 
-        # If selections should be used then work them out, and append
+        # If regions should be used then work them out, and append
         # them to the command:
         #
-        if selections is True:
-            arg = self.get_selection().strip()
+        if region is True:
+            arg = self.get_region().strip()
 
             if arg == '':
                 if arg_required is True:
@@ -50,10 +50,13 @@ class OsCommandCommand(SH.TextCommand):
         #
         def _C(output):
 
+            output = output.strip()
+            if output == '':
+                output = 'Shell command succeeded with no output'
+
             # If we didn't get any output then don't do anything:
             #
-            if output.strip() != '':
-
+            if output != '':
                 # If a panel has been requested then create one and show it,
                 # otherwise create a new buffer, and set its caption:
                 #
@@ -62,7 +65,7 @@ class OsCommandCommand(SH.TextCommand):
                     window.run_command('show_panel', {'panel': 'output.os-command'})
                 else:
                     console = window.new_file()
-                    caption = title if title else '*OS Command ' + command + '*'
+                    caption = title if title else '*Shell Command Output*'
                     console.set_name(caption)
 
                 # Indicate that this buffer is a scratch buffer:
