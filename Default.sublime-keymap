@@ -17,5 +17,14 @@
     "args": {
       "region": true
     }
+  },
+  {
+    /**
+     * Emulate Emacs' 'g'
+     */
+
+    "keys": ["g"],
+    "command": "shell_command_refresh",
+    "context": [{ "key": "setting.ShellCommand" }]
   }
 ]
