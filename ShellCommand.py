@@ -1,3 +1,5 @@
+import sublime
+
 from . import SublimeHelper as SH
 from . import OsShell
 
@@ -13,7 +15,7 @@ class ShellCommandCommand(SH.TextCommand):
             self.default_prompt = default_prompt
         self.data_key = 'ShellCommand'
 
-    def run(self, edit, command='', command_prefix=None, prompt=None, region=False, arg_required=False, panel=False, title=None, syntax=None):
+    def run(self, edit, command='', command_prefix=None, prompt=None, region=False, arg_required=False, panel=False, title=None, syntax=None, refresh=False):
 
         # If regions should be used then work them out, and append
         # them to the command:
@@ -35,7 +37,7 @@ class ShellCommandCommand(SH.TextCommand):
             if command_prefix is not None:
                 command = command_prefix + ' ' + command
 
-            self.run_shell_command(command, panel=panel, title=title, syntax=syntax)
+            self.run_shell_command(command, panel=panel, title=title, syntax=syntax, refresh=refresh)
 
         # If no command is specified then we prompt for one, otherwise
         # we can just execute the command:
@@ -47,7 +49,7 @@ class ShellCommandCommand(SH.TextCommand):
         else:
             _C(command)
 
-    def run_shell_command(self, command, panel=False, title=None, syntax=None):
+    def run_shell_command(self, command, panel=False, title=None, syntax=None, refresh=False):
 
         view = self.view
         window = view.window()
@@ -101,4 +103,47 @@ class ShellCommandCommand(SH.TextCommand):
                 settings = console.settings()
                 settings.set(self.data_key, True)
 
+                # Also, save the command and working directory for later,
+                # since we may need to refresh the panel/window:
+                #
+                data = {
+                    'command': command,
+                    'working_dir': working_dir
+                }
+                settings.set(self.data_key + '_data', data)
+
+            if refresh is True:
+                view.run_command('shell_command_refresh')
+
         OsShell.process(command, _C, working_dir=working_dir)
+
+
+# Refreshing a shell command simply involves re-running the original command:
+#
+class ShellCommandRefreshCommand(ShellCommandCommand):
+
+    def run(self, edit, callback=None):
+
+        view = self.view
+
+        settings = view.settings()
+        if settings.has(self.data_key):
+            data = settings.get(self.data_key + '_data', None)
+            if data is not None:
+
+                # Create a local function that will re-write the buffer contents:
+                #
+                def _C(output, **kwargs):
+
+                    console = view
+
+                    console.set_read_only(False)
+                    region = sublime.Region(0, view.size())
+                    console.run_command('erase_text', {'a': region.a, 'b': region.b})
+                    console.run_command('insert_text', {'pos': 0, 'msg': output})
+                    console.set_read_only(True)
+
+                    if callback is not None:
+                        callback()
+
+                OsShell.process(data['command'], _C, working_dir=data['working_dir'])

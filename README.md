@@ -142,3 +142,44 @@ This will run `git diff` against whatever file is selected, and then use the `Di
 ```
 
 This is the same command as before -- running `git diff` on the file that the cursor is pointing at -- but this time the command will only work if the view is a `ShellCommand` window.
+
+## Refreshing the current view
+
+If a shell command is executed whilst in the context of the output of another shell command and the action would affect the first view, then a refresh can be sent after the command has run. This uses the `refresh` argument. For example, say a view contains a listing of the working directory created with the following shell command:
+
+```json
+[
+  {
+    "keys": ["ctrl+enter", "1"],
+    "command": "shell_command",
+    "args": {
+      "command": "ls -al"
+    }
+  }
+]
+```
+
+If we then have two further shell commands -- one that creates a new file, and one that deletes the file whose name is under the cursor -- we would want to ensure that the `ls` view updates after either of these commands is run. The settings for the two add and delete commands might look like this:
+
+```json
+[
+  {
+    "keys": ["ctrl+enter", "2"],
+    "command": "shell_command",
+    "args": {
+      "command": "cp README.md tmp",
+      "refresh": true
+    }
+  },
+  {
+    "keys": ["ctrl+enter", "3"],
+    "command": "shell_command",
+    "args": {
+      "command": "rm",
+      "arg_required": true,
+      "region": true,
+      "refresh": true
+    }
+  },
+]
+```
