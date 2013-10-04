@@ -1,0 +1,21 @@
+[
+  {
+    /**
+     * Emulate Emacs' M-!
+     */
+
+    "keys": ["alt+shift+1"],
+    "command": "os_command",
+  },
+  {
+    /**
+     * Emulate Emacs' M-|
+     */
+
+    "keys": ["alt+shift+\\"],
+    "command": "os_command",
+    "args": {
+      "region": true
+    }
+  }
+]
