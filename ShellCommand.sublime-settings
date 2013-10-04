@@ -1,0 +1,11 @@
+{
+  /**
+   * The default behaviour in Emacs when there is no output from a successful
+   * shell command, is to show a message in the buffer. We'll make that
+   * configurable because it's
+   */
+
+  "success_but_no_output_message": "Shell command succeeded with no output"
+
+, "show_success_but_no_output_message": false
+}

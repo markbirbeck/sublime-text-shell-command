@@ -66,7 +66,10 @@ class ShellCommandCommand(SH.TextCommand):
 
             output = output.strip()
             if output == '':
-                output = 'Shell command succeeded with no output'
+                settings = sublime.load_settings('ShellCommand.sublime-settings')
+                show_message = settings.get('show_success_but_no_output_message')
+                if show_message:
+                    output = settings.get('success_but_no_output_message')
 
             # If we didn't get any output then don't do anything:
             #
