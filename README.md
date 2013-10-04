@@ -2,6 +2,36 @@
 
 The `ShellCommand` plugin allows OS shell commands to be run and their output to be sent to buffers or panels.
 
+It can:
+* run pretty much any shell command, either typed into a prompt or configured in key bindings and commands;
+* the output from a command is directable to either a new buffer or a panel;
+* subsequent commands can cause other panels to re-run their commands, i.e., to 'refresh' themselves;
+* the output of a shell command can be controlled by any syntax definition.
+
+# Motivation
+
+Whilst working on a number of Emacs-style extensions for Sublime it became clear that much of the functionality of extensions such as `dired` and `magit` required little more than the ability to move from one buffer to another, invoking commands based on context on the way.
+
+For example, `dired` shows a list of files and directories, and then allows users to interact with those files by selecting items in the buffer and pressing some key combinations. This way files and directories can be opened, renamed, deleted, zipped up, compared, and so on.
+
+Similarly, the incredibly useful `magit` firstly shows the status of a Git repo and then allows files to be staged, unstaged, committed and diffed, whilst branches can be switched between, rebased, merged, pushed, pulled and more.
+
+So this extension is the factoring out of the core functionality on top of which tools like `dired` and `magit` can be built. A Sublime-style version of `magit` should be availble shortly.
+
+# Installation
+
+The package is available on [Package Control](https://sublime.wbond.net/).
+
+# Key bindings
+
+The built-in bindings are based on similar functionality for Emacs:
+
+* `alt+!` will show a prompt into which a shell command can be typed;
+* `alt+|` will use any selections or text under the cursor as input for a shell command;
+* `g` in a view that is showing the output of a shell command will cause the command to be run again.
+
+In addition to this it's possible to customise the behaviour for many different scenarios.
+
 # Examples
 
 Note that the following key bindings are for illustrative purposes only.
