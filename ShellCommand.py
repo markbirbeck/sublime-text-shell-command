@@ -12,7 +12,7 @@ class ShellCommandCommand(SH.TextCommand):
         else:
             self.default_prompt = default_prompt
 
-    def run(self, edit, command='', command_prefix=None, prompt=None, region=False, arg_required=False, panel=False, title=None):
+    def run(self, edit, command='', command_prefix=None, prompt=None, region=False, arg_required=False, panel=False, title=None, syntax=None):
 
         # If regions should be used then work them out, and append
         # them to the command:
@@ -34,7 +34,7 @@ class ShellCommandCommand(SH.TextCommand):
             if command_prefix is not None:
                 command = command_prefix + ' ' + command
 
-            self.run_shell_command(command, panel=panel, title=title)
+            self.run_shell_command(command, panel=panel, title=title, syntax=syntax)
 
         # If no command is specified then we prompt for one, otherwise
         # we can just execute the command:
@@ -46,7 +46,7 @@ class ShellCommandCommand(SH.TextCommand):
         else:
             _C(command)
 
-    def run_shell_command(self, command, panel=False, title=None):
+    def run_shell_command(self, command, panel=False, title=None, syntax=None):
 
         view = self.view
         window = view.window()
@@ -82,6 +82,12 @@ class ShellCommandCommand(SH.TextCommand):
                 # Indicate that this buffer is a scratch buffer:
                 #
                 console.set_scratch(True)
+
+                # Set the syntax for the output:
+                #
+                if syntax is not None:
+                    resources = sublime.find_resources(syntax + '.tmLanguage')
+                    console.set_syntax_file(resources[0])
 
                 # Insert the output into the buffer:
                 #

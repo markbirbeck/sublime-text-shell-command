@@ -104,3 +104,21 @@ If the `region` option is set then any active selections are appended to the com
 
 Sometimes it's useful to provide a command prompt that relates to a specific shell command, and the user would then only need to provide the parameters. This example creates a prompt labelled 'Git Command', into which the user need only type the Git command itself, and any parameters. For example, to run `git status`, only `status` would need to be entered into the prompt.
 
+## Applying a syntax definition to the output
+
+```json
+[
+  {
+    "keys": ["ctrl+enter"],
+    "command": "shell_command",
+    "args": {
+      "command": "git diff",
+      "region": true,
+      "syntax": "Diff",
+      "title": "Diff"
+    },
+  }
+]
+```
+
+This will run `git diff` against whatever file is selected, and then use the `Diff` syntax file (`Packages/Diff/Diff.tmLanguage`) to format the output.
