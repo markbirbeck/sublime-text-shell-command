@@ -86,3 +86,21 @@ To run a particular shell command use the `command` parameter.
 ```
 
 If the `region` option is set then any active selections are appended to the command. If there are no active selections then the word under the cursor is used. In this example if there were no selections, and no word under the cursor then the `ls -al` command would be run as is, most likely giving the contents of the project directory. But if a directory name were under the cursor, or was selected, then its contents would be listed.
+
+## Providing a common command prefix
+
+```json
+[
+  {
+    "keys": ["ctrl+enter"],
+    "command": "shell_command",
+    "args": {
+      "command_prefix": "git",
+      "prompt": "Git Command"
+    }
+  }
+]
+```
+
+Sometimes it's useful to provide a command prompt that relates to a specific shell command, and the user would then only need to provide the parameters. This example creates a prompt labelled 'Git Command', into which the user need only type the Git command itself, and any parameters. For example, to run `git status`, only `status` would need to be entered into the prompt.
+

@@ -4,7 +4,15 @@ from . import OsShell
 
 class ShellCommandCommand(SH.TextCommand):
 
-    def run(self, edit, command='', prompt=None, region=False, arg_required=False, panel=False, title=None):
+    def __init__(self, plugin, default_prompt=None, **kwargs):
+
+        SH.TextCommand.__init__(self, plugin, **kwargs)
+        if default_prompt is None:
+            self.default_prompt = 'Shell Command'
+        else:
+            self.default_prompt = default_prompt
+
+    def run(self, edit, command='', command_prefix=None, prompt=None, region=False, arg_required=False, panel=False, title=None):
 
         # If regions should be used then work them out, and append
         # them to the command:
@@ -23,6 +31,9 @@ class ShellCommandCommand(SH.TextCommand):
         #
         def _C(command):
 
+            if command_prefix is not None:
+                command = command_prefix + ' ' + command
+
             self.run_shell_command(command, panel=panel, title=title)
 
         # If no command is specified then we prompt for one, otherwise
@@ -30,7 +41,7 @@ class ShellCommandCommand(SH.TextCommand):
         #
         if command.strip() == '':
             if prompt is None:
-                prompt = 'OS Command'
+                prompt = self.default_prompt
             self.view.window().show_input_panel(prompt, '', _C, None, None)
         else:
             _C(command)
