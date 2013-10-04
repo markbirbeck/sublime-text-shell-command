@@ -2,7 +2,7 @@ from . import SublimeHelper as SH
 from . import OsShell
 
 
-class OsCommandCommand(SH.TextCommand):
+class ShellCommandCommand(SH.TextCommand):
 
     def run(self, edit, command='', prompt=None, region=False, arg_required=False, panel=False, title=None):
 
@@ -23,7 +23,7 @@ class OsCommandCommand(SH.TextCommand):
         #
         def _C(command):
 
-            self.run_os_command(command, panel=panel, title=title)
+            self.run_shell_command(command, panel=panel, title=title)
 
         # If no command is specified then we prompt for one, otherwise
         # we can just execute the command:
@@ -35,7 +35,7 @@ class OsCommandCommand(SH.TextCommand):
         else:
             _C(command)
 
-    def run_os_command(self, command, panel=False, title=None):
+    def run_shell_command(self, command, panel=False, title=None):
 
         view = self.view
         window = view.window()

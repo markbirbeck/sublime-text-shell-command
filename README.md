@@ -1,6 +1,6 @@
 # Introduction
 
-The `OsCommand` plugin allows OS shell commands to be run and their output to be sent to buffers or panels.
+The `ShellCommand` plugin allows OS shell commands to be run and their output to be sent to buffers or panels.
 
 # Examples
 
@@ -12,7 +12,7 @@ Note that the following key bindings are for illustrative purposes only.
 [
   {
     "keys": ["ctrl+enter"],
-    "command": "os_command"
+    "command": "shell_command"
   }
 ]
 ```
@@ -25,7 +25,7 @@ This is the most basic use of the plugin, and will result in a prompt being prov
 [
   {
     "keys": ["ctrl+enter"],
-    "command": "os_command",
+    "command": "shell_command",
     "args": {
       "prompt": "Enter a command",
       "title": "My Command"
@@ -42,7 +42,7 @@ Using these arguments the caption next to the prompt can be changed, as well as 
 [
   {
     "keys": ["ctrl+enter"],
-    "command": "os_command",
+    "command": "shell_command",
     "args": {
       "prompt": "Enter a command",
       "title": "My Command",
@@ -60,7 +60,7 @@ Often the output of a command is only required for a short amount of time, in wh
 [
   {
     "keys": ["ctrl+enter"],
-    "command": "os_command",
+    "command": "shell_command",
     "args": {
       "command": "git status"
     }
@@ -76,7 +76,7 @@ To run a particular shell command use the `command` parameter.
 [
   {
     "keys": ["ctrl+enter"],
-    "command": "os_command",
+    "command": "shell_command",
     "args": {
       "command": "ls -al",
       "region": true
