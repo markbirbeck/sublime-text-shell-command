@@ -1,0 +1,30 @@
+[
+  {
+    /**
+     * Emulate Emacs' M-!
+     */
+
+    "keys": ["alt+shift+1"],
+    "command": "shell_command",
+  },
+  {
+    /**
+     * Emulate Emacs' M-|
+     */
+
+    "keys": ["alt+shift+\\"],
+    "command": "shell_command",
+    "args": {
+      "region": true
+    }
+  },
+  {
+    /**
+     * Emulate Emacs' 'g'
+     */
+
+    "keys": ["g"],
+    "command": "shell_command_refresh",
+    "context": [{ "key": "setting.ShellCommand" }]
+  }
+]
