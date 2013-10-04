@@ -56,21 +56,31 @@ class TextCommand(sublime_plugin.TextCommand):
         view = self.view
 
         if view is not None:
-            window = view.window()
 
-            # If there is a file in the active view or a project file in the window,
-            # then use it to work out a working directory:
+            # If there is a file in the active view then use it to work out
+            # a working directory:
             #
-            file_name = view.file_name() or window.project_file_name()
+            file_name = view.file_name()
             if file_name is not None:
                 dirname, _ = os.path.split(os.path.abspath(file_name))
                 return dirname
 
-            # Alternatively, see if there are any open folders, and if so, use the
-            # path of the first one:
-            #
-            folders = window.folders()
-            if folders is not None:
-                return folders[0]
+            window = view.window()
+            if window is not None:
+
+                # If there is a project file in the window then use it to work
+                # out a working directory:
+                #
+                file_name = window.project_file_name()
+                if file_name is not None:
+                    dirname, _ = os.path.split(os.path.abspath(file_name))
+                    return dirname
+
+                # Alternatively, see if there are any open folders, and if so, use the
+                # path of the first one:
+                #
+                folders = window.folders()
+                if folders is not None:
+                    return folders[0]
 
         return ''
