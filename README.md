@@ -122,3 +122,23 @@ Sometimes it's useful to provide a command prompt that relates to a specific she
 ```
 
 This will run `git diff` against whatever file is selected, and then use the `Diff` syntax file (`Packages/Diff/Diff.tmLanguage`) to format the output.
+
+## Restricting key bindings to a shell command view
+
+```json
+[
+  {
+    "keys": ["ctrl+enter"],
+    "command": "shell_command",
+    "args": {
+      "command": "git diff",
+      "region": true,
+      "syntax": "Diff",
+      "title": "Diff"
+    },
+    "context": [{ "key": "setting.ShellCommand" }]
+  }
+]
+```
+
+This is the same command as before -- running `git diff` on the file that the cursor is pointing at -- but this time the command will only work if the view is a `ShellCommand` window.

@@ -11,6 +11,7 @@ class ShellCommandCommand(SH.TextCommand):
             self.default_prompt = 'Shell Command'
         else:
             self.default_prompt = default_prompt
+        self.data_key = 'ShellCommand'
 
     def run(self, edit, command='', command_prefix=None, prompt=None, region=False, arg_required=False, panel=False, title=None, syntax=None):
 
@@ -94,5 +95,10 @@ class ShellCommandCommand(SH.TextCommand):
                 console.set_read_only(False)
                 console.run_command('insert_text', {'pos': 0, 'msg': output})
                 console.set_read_only(True)
+
+                # Set a flag on the view that we can use in key bindings:
+                #
+                settings = console.settings()
+                settings.set(self.data_key, True)
 
         OsShell.process(command, _C, working_dir=working_dir)
