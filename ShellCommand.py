@@ -72,8 +72,8 @@ class ShellCommandCommand(SH.TextCommand):
                 # otherwise create a new buffer, and set its caption:
                 #
                 if panel is True:
-                    console = window.get_output_panel('os-command')
-                    window.run_command('show_panel', {'panel': 'output.os-command'})
+                    console = window.get_output_panel('ShellCommand')
+                    window.run_command('show_panel', {'panel': 'output.ShellCommand'})
                 else:
                     console = window.new_file()
                     caption = title if title else '*Shell Command Output*'
