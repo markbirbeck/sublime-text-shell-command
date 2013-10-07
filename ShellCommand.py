@@ -98,7 +98,7 @@ class ShellCommandCommand(SH.TextCommand):
                 # Insert the output into the buffer:
                 #
                 console.set_read_only(False)
-                console.run_command('insert_text', {'pos': 0, 'msg': output})
+                console.run_command('sublime_helper_insert_text', {'pos': 0, 'msg': output})
                 console.set_read_only(True)
 
                 # Set a flag on the view that we can use in key bindings:
@@ -142,8 +142,8 @@ class ShellCommandRefreshCommand(ShellCommandCommand):
 
                     console.set_read_only(False)
                     region = sublime.Region(0, view.size())
-                    console.run_command('erase_text', {'a': region.a, 'b': region.b})
-                    console.run_command('insert_text', {'pos': 0, 'msg': output})
+                    console.run_command('sublime_helper_erase_text', {'a': region.a, 'b': region.b})
+                    console.run_command('sublime_helper_insert_text', {'pos': 0, 'msg': output})
                     console.set_read_only(True)
 
                     if callback is not None:
