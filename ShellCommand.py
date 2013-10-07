@@ -128,7 +128,7 @@ class ShellCommandOnRegionCommand(ShellCommandCommand):
 
     def run(self, edit, command=None, command_prefix=None, prompt=None, arg_required=False, panel=False, title=None, syntax=None, refresh=False):
 
-        ShellCommandCommand.run(self, edit, command=command, command_prefix=command_prefix, prompt=prompt, region=True, arg_required=arg_required, panel=panel, title=title, syntax=syntax, refresh=refresh)
+        ShellCommandCommand.run(self, edit, command=command, command_prefix=command_prefix, prompt=prompt, region=True, arg_required=True, panel=panel, title=title, syntax=syntax, refresh=refresh)
 
 
 # Refreshing a shell command simply involves re-running the original command:

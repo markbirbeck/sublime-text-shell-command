@@ -220,6 +220,7 @@ If we then have two further shell commands -- one that creates a new file, and o
 
 * Commands now *really are* run asynchronously. (@SirLenz0rlot)
   Fixes issue #2.
+* Add `shell_command_on_region` to alignt with Emacs version.
 
 2013-10-07 (v0.2.0)
 
