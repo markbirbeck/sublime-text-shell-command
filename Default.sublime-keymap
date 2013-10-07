@@ -13,10 +13,7 @@
      */
 
     "keys": ["alt+shift+\\"],
-    "command": "shell_command",
-    "args": {
-      "region": true
-    }
+    "command": "shell_command_on_region"
   },
   {
     /**
