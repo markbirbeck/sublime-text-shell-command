@@ -1,11 +1,31 @@
 import os
 import shlex
 import subprocess
+import threading
 
 from . import SublimeHelper as SH
 
 
 def process(commands, callback=None, working_dir=None, **kwargs):
+
+    # If there's no callback method then just return the output as
+    # a string:
+    #
+    if callback is None:
+        return _process(commands, working_dir=working_dir, **kwargs)
+
+    # If there is a callback then run this asynchronously:
+    #
+    else:
+        thread = threading.Thread(target=_process, kwargs={
+            'commands': commands,
+            'callback': callback,
+            'working_dir': working_dir
+        })
+        thread.start()
+
+
+def _process(commands, callback=None, working_dir=None, **kwargs):
     '''Process one or more OS commands.'''
 
     # We're expecting a list of commands, so if we only have one, convert

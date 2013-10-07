@@ -24,7 +24,7 @@ The package is available on [Package Control](https://sublime.wbond.net/).
 
 # Key bindings
 
-The built-in bindings are based on similar functionality for Emacs:
+The built-in bindings are based on similar functionality for Emacs (see [Execute External Command](http://www.emacswiki.org/emacs/ExecuteExternalCommand)):
 
 * `alt+!` will show a prompt into which a shell command can be typed;
 * `alt+|` will use any selections or text under the cursor as input for a shell command;
@@ -215,6 +215,11 @@ If we then have two further shell commands -- one that creates a new file, and o
 ```
 
 # Changelog
+
+2013-10-07 (v0.3.0)
+
+* Commands now *really are* run asynchronously. (@SirLenz0rlot)
+  Fixes issue #2.
 
 2013-10-07 (v0.2.0)
 

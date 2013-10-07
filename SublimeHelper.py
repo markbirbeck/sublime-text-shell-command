@@ -9,7 +9,7 @@ import sublime_plugin
 
 def main_thread(callback, *args, **kwargs):
 
-    sublime.set_timeout(functools.partial(callback, *args, **kwargs), 0)
+    sublime.set_timeout_async(functools.partial(callback, *args, **kwargs), 0)
 
 
 def error_message(*args, **kwargs):
