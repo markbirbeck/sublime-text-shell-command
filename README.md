@@ -216,6 +216,12 @@ If we then have two further shell commands -- one that creates a new file, and o
 
 # Changelog
 
+2013-10-07 (v0.2.0)
+
+* Some crucial text commands were not include (@bizoo).
+  Fixes issue #1.
+* The region under the cursor was not being used as a parameter.
+
 2013-10-04 (v0.1.0)
 
 * Initial release.
