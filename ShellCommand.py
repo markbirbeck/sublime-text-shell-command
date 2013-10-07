@@ -17,6 +17,8 @@ class ShellCommandCommand(SH.TextCommand):
 
     def run(self, edit, command=None, command_prefix=None, prompt=None, region=False, arg_required=False, panel=False, title=None, syntax=None, refresh=False):
 
+        arg = None
+
         # If regions should be used then work them out, and append
         # them to the command:
         #
@@ -27,8 +29,6 @@ class ShellCommandCommand(SH.TextCommand):
                 if arg_required is True:
                     SH.error_message('This command requires a parameter.')
                     return
-            else:
-                command = command + ' ' + arg
 
         # Setup a closure to run the command:
         #
@@ -36,6 +36,9 @@ class ShellCommandCommand(SH.TextCommand):
 
             if command_prefix is not None:
                 command = command_prefix + ' ' + command
+
+            if arg is not None:
+                command = command + ' ' + arg
 
             self.run_shell_command(command, panel=panel, title=title, syntax=syntax, refresh=refresh)
 
