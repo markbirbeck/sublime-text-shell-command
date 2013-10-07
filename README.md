@@ -24,7 +24,7 @@ The package is available on [Package Control](https://sublime.wbond.net/).
 
 # Key bindings
 
-The built-in bindings are based on similar functionality for Emacs:
+The built-in bindings are based on similar functionality for Emacs (see [Execute External Command](http://www.emacswiki.org/emacs/ExecuteExternalCommand)):
 
 * `alt+!` will show a prompt into which a shell command can be typed;
 * `alt+|` will use any selections or text under the cursor as input for a shell command;
