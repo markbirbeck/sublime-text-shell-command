@@ -12,11 +12,6 @@ def main_thread(callback, *args, **kwargs):
     sublime.set_timeout_async(functools.partial(callback, *args, **kwargs), 0)
 
 
-def error_message(*args, **kwargs):
-
-    main_thread(sublime.error_message, *args, **kwargs)
-
-
 class TextCommand(sublime_plugin.TextCommand):
 
     def get_region(self, view=None):

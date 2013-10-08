@@ -39,7 +39,7 @@ class ShellCommandCommand(SH.TextCommand):
 
             if arg == '':
                 if arg_required is True:
-                    SH.error_message('This command requires a parameter.')
+                    sublime.message_dialog('This command requires a parameter.')
                     return
 
         # Setup a closure to run the command:
@@ -70,7 +70,7 @@ class ShellCommandCommand(SH.TextCommand):
         window = view.window()
 
         if command is None:
-            SH.error_message('No command provided.')
+            sublime.message_dialog('No command provided.')
             return
 
         working_dir = self.get_working_dir()

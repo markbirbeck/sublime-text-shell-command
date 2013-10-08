@@ -3,6 +3,8 @@ import shlex
 import subprocess
 import threading
 
+import sublime
+
 from . import SublimeHelper as SH
 
 
@@ -76,7 +78,7 @@ def _process(commands, callback=None, working_dir=None, **kwargs):
         except OSError as e:
 
             if e.errno == 2:
-                SH.error_message('Command not found\n\nCommand is: %s' % command)
+                sublime.message_dialog('Command not found\n\nCommand is: %s' % command)
             else:
                 raise e
 
