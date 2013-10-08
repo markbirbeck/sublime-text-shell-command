@@ -15,7 +15,19 @@ class ShellCommandCommand(SH.TextCommand):
             self.default_prompt = default_prompt
         self.data_key = 'ShellCommand'
 
-    def run(self, edit, command=None, command_prefix=None, prompt=None, region=False, arg_required=False, panel=False, title=None, syntax=None, refresh=False):
+    def run(self, edit, command=None, command_prefix=None, prompt=None, region=None, arg_required=None, panel=None, title=None, syntax=None, refresh=None):
+
+        if region is None:
+            region is False
+
+        if arg_required is None:
+            arg_required = False
+
+        if panel is None:
+            panel = False
+
+        if refresh is None:
+            refresh = False
 
         arg = None
 
@@ -126,7 +138,7 @@ class ShellCommandCommand(SH.TextCommand):
 
 class ShellCommandOnRegionCommand(ShellCommandCommand):
 
-    def run(self, edit, command=None, command_prefix=None, prompt=None, arg_required=False, panel=False, title=None, syntax=None, refresh=False):
+    def run(self, edit, command=None, command_prefix=None, prompt=None, arg_required=None, panel=None, title=None, syntax=None, refresh=None):
 
         ShellCommandCommand.run(self, edit, command=command, command_prefix=command_prefix, prompt=prompt, region=True, arg_required=True, panel=panel, title=title, syntax=syntax, refresh=refresh)
 
