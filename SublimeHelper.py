@@ -87,7 +87,8 @@ class SublimeHelperInsertTextCommand(sublime_plugin.TextCommand):
 
     def run(self, edit, pos, msg):
 
-        self.view.insert(edit, pos, msg)
+        if msg is not None:
+            self.view.insert(edit, pos, msg)
 
 
 # The command that is executed to erase text into a view:
