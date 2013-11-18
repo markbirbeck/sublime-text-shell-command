@@ -136,11 +136,100 @@ class ShellCommandCommand(SH.TextCommand):
         OsShell.process(command, _C, working_dir=working_dir)
 
 
+class ShellCommandPromptCommand(ShellCommandCommand):
+
+    ''' User can input with prompt panel through ${1} like variables.
+    EX) git branch -m ${current_branch} ${new_branch:Enter branch name}
+    in $, colon(:) is a separator, ${<variable_name>:<Prompt message if not exist>}.
+    User input invoked from left to right.
+    '''
+
+    def run_shell_command(self, command=None, panel=False, title=None, syntax=None, refresh=False):
+        if not command:
+            return  # FIXME: command is empty, should return error message.
+
+        asks, template = self.parse_command(command)
+        argdict = {}
+        def _on_input_end(arglist):
+            if len(asks) != len(arglist):
+                return  # NOTE: assertion code (Please remove after well tested)
+            argstr = template.format(**arglist)
+            super(__class__, self).run_shell_command(argstr, panel, title, syntax, refresh)
+        if asks:
+            self.ask_to_user(asks, _on_input_end)
+        else:
+            self.run_shell_command(template, out_to=out_to, title=title, syntax=syntax,
+                                   refresh=refresh, output_filter=output_filter)
+
+    def ask_to_user(self, asks, callback):
+        askstack = asks[:]
+        arglist = []
+
+        def _on_done(arg):
+            arglist.append(arg)
+            if askstack:
+                _run()
+            else:
+                # all variable input
+                argdict = {x['variable']:y for x, y in zip(asks, arglist)}
+                callback(argdict)
+
+        def _on_cancel():
+            callback([])
+
+        def _run():
+            ask = askstack.pop(0)
+            self.view.window().show_input_panel(ask['message'], ask['default'], _on_done, None, _on_cancel)
+        _run()
+
+    def parse_command(self, command):
+        ''' Inspired by Sublime's snippet syntax; "${...}" is a variable.
+        But it's slightly different, ${<variable_name>:<Prompt message if not exist>[:default value]}
+        EX) git branch -m ${current_branch} ${new_branch:Enter branch name}
+        '''
+        parsed = re.split(r'\${(.*?)}', command)
+        # if not variables, return command itself
+        if len(parsed) == 1:
+            return [], command
+        template_parts = []
+        asks = []
+        for idx, item in enumerate(parsed, start=1):
+            # variable
+            if idx % 2 == 0:
+                chs = item.split(':')
+                variable_name = chs[0]
+                v = self.find_defined_value(variable_name)
+                if v:
+                    template_parts.append(v)
+                    continue
+                # defined variable not found. Start prompting.
+                if len(chs) == 1:
+                    prompt_message = variable_name + ':'
+                else:
+                    prompt_message = chs[1]
+                    default_value = chs[2] if len(chs) > 2 else ''
+                asks.append(dict(variable=variable_name, message=prompt_message, default=default_value))
+                template_parts.append('{%s}' % variable_name)
+            else:
+                template_parts.append(item)
+        return asks, ''.join(template_parts)
+
+    def find_defined_value(self, item):
+        window = self.view.window()
+        if item == 'project_folders':
+            return ' '.join(window.folders() or [])
+        elif item == 'project_name':
+            project_path = window.project_file_name()
+            if not project_path:
+                return ''
+            return os.path.basename(project_path).replace('.sublime-project', '')
+
 class ShellCommandOnRegionCommand(ShellCommandCommand):
 
     def run(self, edit, command=None, command_prefix=None, prompt=None, arg_required=None, panel=None, title=None, syntax=None, refresh=None):
 
-        ShellCommandCommand.run(self, edit, command=command, command_prefix=command_prefix, prompt=prompt, region=True, arg_required=True, panel=panel, title=title, syntax=syntax, refresh=refresh)
+        ShellCommandCommand.run(self, edit, command=command, command_prefix=command_prefix, prompt=prompt,
+                                region=True, arg_required=True, panel=panel, title=title, syntax=syntax, refresh=refresh)
 
 
 # Refreshing a shell command simply involves re-running the original command:
