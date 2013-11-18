@@ -150,10 +150,10 @@ class ShellCommandPromptCommand(ShellCommandCommand):
 
         asks, template = self.parse_command(command)
         argdict = {}
-        def _on_input_end(arglist):
-            if len(asks) != len(arglist):
+        def _on_input_end(argdict):
+            if len(asks) != len(argdict):
                 return  # NOTE: assertion code (Please remove after well tested)
-            argstr = template.format(**arglist)
+            argstr = template.format(**argdict)
             super(__class__, self).run_shell_command(argstr, panel, title, syntax, refresh)
         if asks:
             self.ask_to_user(asks, _on_input_end)
@@ -195,9 +195,13 @@ class ShellCommandPromptCommand(ShellCommandCommand):
         asks = []
         for idx, item in enumerate(parsed, start=1):
             # variable
+            auto_variable = 0
             if idx % 2 == 0:
                 chs = item.split(':')
                 variable_name = chs[0]
+                if not variable_name:
+                    variable_name = '_' + str(auto_variable)
+                    auto_variable += 1
                 v = self.find_defined_value(variable_name)
                 if v:
                     template_parts.append(v)
