@@ -116,25 +116,16 @@ class ShellCommandRefreshCommand(ShellCommandCommand):
 
     def run(self, edit, callback=None):
 
-        view = self.view
+        console = self.view
 
-        settings = view.settings()
+        settings = console.settings()
         if settings.has(self.data_key):
             data = settings.get(self.data_key + '_data', None)
             if data is not None:
 
-                # Create a local function that will re-write the buffer contents:
-                #
-                def _C(output, **kwargs):
+                console.set_read_only(False)
+                console.run_command('sublime_helper_clear_buffer')
+                console.set_read_only(True)
 
-                    console = view
+                self.run_shell_command(command=data['command'], console=console, working_dir=data['working_dir'])
 
-                    console.set_read_only(False)
-                    console.run_command('sublime_helper_clear_buffer')
-                    console.run_command('sublime_helper_insert_text', {'pos': 0, 'msg': output})
-                    console.set_read_only(True)
-
-                    if callback is not None:
-                        callback()
-
-                OsShell.process(data['command'], _C, working_dir=data['working_dir'])
