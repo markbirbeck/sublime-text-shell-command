@@ -108,3 +108,61 @@ class SublimeHelperClearBufferCommand(sublime_plugin.TextCommand):
 
         view = self.view
         view.run_command('sublime_helper_erase_text', {'a': 0, 'b': view.size()})
+
+
+class OutputTarget():
+
+    def __init__(self, window, data_key, command, working_dir, title=None, syntax=None, panel=False, console=None):
+
+        # If a panel has been requested then create one and show it,
+        # otherwise create a new buffer, and set its caption:
+        #
+        if console is not None:
+            self.console = console
+        else:
+            if panel is True:
+                self.console = window.get_output_panel('ShellCommand')
+                window.run_command('show_panel', {'panel': 'output.ShellCommand'})
+            else:
+                self.console = window.new_file()
+                caption = title if title else '*Shell Command Output*'
+                self.console.set_name(caption)
+
+            # Indicate that this buffer is a scratch buffer:
+            #
+            self.console.set_scratch(True)
+            self.console.set_read_only(True)
+
+            # Set the syntax for the output:
+            #
+            if syntax is not None:
+                resources = sublime.find_resources(syntax + '.tmLanguage')
+                self.console.set_syntax_file(resources[0])
+
+            # Set a flag on the view that we can use in key bindings:
+            #
+            settings = self.console.settings()
+            settings.set(data_key, True)
+
+            # Also, save the command and working directory for later,
+            # since we may need to refresh the panel/window:
+            #
+            data = {
+                'command': command,
+                'working_dir': working_dir
+            }
+            settings.set(data_key + '_data', data)
+
+    def append_text(self, output):
+
+        console = self.console
+
+        # Insert the output into the buffer:
+        #
+        console.set_read_only(False)
+        console.run_command('sublime_helper_insert_text', {'pos': console.size(), 'msg': output})
+        console.set_read_only(True)
+
+    def set_status(self, tag, message):
+
+        self.console.set_status(tag, message)
