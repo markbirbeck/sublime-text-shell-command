@@ -9,13 +9,13 @@ import sublime
 from . import SublimeHelper as SH
 
 
-def process(commands, callback=None, working_dir=None, **kwargs):
+def process(commands, callback=None, working_dir=None, wait_for_completion=None, **kwargs):
 
     # If there's no callback method then just return the output as
     # a string:
     #
     if callback is None:
-        return _process(commands, working_dir=working_dir, **kwargs)
+        return _process(commands, working_dir=working_dir, wait_for_completion=wait_for_completion, **kwargs)
 
     # If there is a callback then run this asynchronously:
     #
@@ -23,13 +23,17 @@ def process(commands, callback=None, working_dir=None, **kwargs):
         thread = threading.Thread(target=_process, kwargs={
             'commands': commands,
             'callback': callback,
-            'working_dir': working_dir
+            'working_dir': working_dir,
+            'wait_for_completion': wait_for_completion
         })
         thread.start()
 
 
-def _process(commands, callback=None, working_dir=None, **kwargs):
+def _process(commands, callback=None, working_dir=None, wait_for_completion=None, **kwargs):
     '''Process one or more OS commands.'''
+
+    if wait_for_completion is None:
+        wait_for_completion = False
 
     # We're expecting a list of commands, so if we only have one, convert
     # it to a list:
@@ -89,11 +93,12 @@ def _process(commands, callback=None, working_dir=None, **kwargs):
                         while output:
                             output = proc.stdout.readline().decode()
 
-                            # If there is no callback function, then batch up
+                            # If the caller wants everything in one go, or
+                            # there is no callback function, then batch up
                             # the output. Otherwise pass it back to the
                             # caller as it becomes available:
                             #
-                            if callback is None:
+                            if wait_for_completion is True or callback is None:
                                 results += output
                             else:
                                 SH.main_thread(callback, output, **kwargs)
@@ -117,5 +122,8 @@ def _process(commands, callback=None, working_dir=None, **kwargs):
 
     if callback is None:
         return result
+
+    if wait_for_completion is True:
+        SH.main_thread(callback, result, **kwargs)
 
     SH.main_thread(callback, None, **kwargs)

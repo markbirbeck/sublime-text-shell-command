@@ -16,7 +16,7 @@ class ShellCommandCommand(SH.TextCommand):
         self.data_key = 'ShellCommand'
         self.output_written = False
 
-    def run(self, edit, command=None, command_prefix=None, prompt=None, region=None, arg_required=None, panel=None, title=None, syntax=None, refresh=None):
+    def run(self, edit, command=None, command_prefix=None, prompt=None, region=None, arg_required=None, panel=None, title=None, syntax=None, refresh=None, wait_for_completion=None):
 
         if region is None:
             region is False
@@ -53,7 +53,7 @@ class ShellCommandCommand(SH.TextCommand):
             if arg is not None:
                 command = command + ' ' + arg
 
-            self.run_shell_command(command, panel=panel, title=title, syntax=syntax, refresh=refresh)
+            self.run_shell_command(command, panel=panel, title=title, syntax=syntax, refresh=refresh, wait_for_completion=wait_for_completion)
 
         # If no command is specified then we prompt for one, otherwise
         # we can just execute the command:
@@ -65,7 +65,7 @@ class ShellCommandCommand(SH.TextCommand):
         else:
             _C(command)
 
-    def run_shell_command(self, command=None, panel=False, title=None, syntax=None, refresh=False, console=None, working_dir=None):
+    def run_shell_command(self, command=None, panel=False, title=None, syntax=None, refresh=False, console=None, working_dir=None, wait_for_completion=None):
 
         view = self.view
         window = view.window()
@@ -100,7 +100,7 @@ class ShellCommandCommand(SH.TextCommand):
                 if refresh is True:
                     view.run_command('shell_command_refresh')
 
-        OsShell.process(command, _C, working_dir=working_dir)
+        OsShell.process(command, _C, working_dir=working_dir, wait_for_completion=wait_for_completion)
 
 
 class ShellCommandOnRegionCommand(ShellCommandCommand):
