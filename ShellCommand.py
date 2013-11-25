@@ -69,6 +69,7 @@ class ShellCommandCommand(SH.TextCommand):
 
         view = self.view
         window = view.window()
+        settings = sublime.load_settings('ShellCommand.sublime-settings')
 
         if command is None:
             sublime.message_dialog('No command provided.')
@@ -80,17 +81,20 @@ class ShellCommandCommand(SH.TextCommand):
         # Run the command and write any output to the buffer:
         #
         output_target = SH.OutputTarget(window, self.data_key, command, working_dir, title=title, syntax=syntax, panel=panel, console=console)
+        message = self.default_prompt + ': (' + ''.join(command)[:20] + ')'
+        progress = SH.ProgressDisplay(output_target, message, message,
+                                      settings.get('progress_display_heartbeat'))
 
         def _C(output):
 
             if output is not None:
                 output_target.append_text(output)
                 self.output_written = True
+                progress.start()
             else:
                 # If there has been no output:
                 #
                 if self.output_written is False:
-                    settings = sublime.load_settings('ShellCommand.sublime-settings')
                     show_message = settings.get('show_success_but_no_output_message')
                     if show_message:
                         output = settings.get('success_but_no_output_message')
@@ -99,6 +103,8 @@ class ShellCommandCommand(SH.TextCommand):
                 #
                 if refresh is True:
                     view.run_command('shell_command_refresh')
+
+                progress.stop()
 
         OsShell.process(command, _C, working_dir=working_dir, wait_for_completion=wait_for_completion)
 

@@ -10,4 +10,6 @@
 , "success_but_no_output_message": "Shell command succeeded with no output"
 
 , "show_success_but_no_output_message": false
+
+, "progress_display_heartbeat": 500
 }

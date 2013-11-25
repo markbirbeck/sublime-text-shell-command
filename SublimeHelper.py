@@ -166,3 +166,71 @@ class OutputTarget():
     def set_status(self, tag, message):
 
         self.console.set_status(tag, message)
+
+
+# Code largely taken from the nifty class in sublime_package_control:
+#
+#   https://github.com/wbond/sublime_package_control/blob/master/package_control/thread_progress.py
+#
+# The minor changes made are simply so that we deal with a view rather than a
+# thread, which allows us to relate the status messages more closely with their
+# corresponding buffer. It does mean that it's then the caller's responsibility
+# to call start() and stop(), though.
+#
+class ProgressDisplay():
+    """
+    Animates an indicator, [=   ], in the status area until stopped
+
+    :param view:
+        The view that 'owns' the activity
+
+    :param tag:
+        The tag to identify the message within sublime
+
+    :param message:
+        The message to display next to the activity indicator
+    """
+
+    def __init__(self, view, tag, message, heartbeat=None):
+        self.view = view
+        self.tag = tag
+        self.message = message
+        self.addend = 1
+        self.size = 8
+        self.heartbeat = heartbeat if heartbeat is not None else 100
+        self.stop()
+        sublime.set_timeout(lambda: self.run(), self.heartbeat)
+
+    def start(self):
+        self._running = True
+        self.counter = 0
+        self.run()
+
+    def stop(self):
+        self._running = False
+
+    def is_running(self):
+        return self._running
+
+    def set_status(self, message):
+        self.view.set_status(self.tag, message)
+
+    def run(self):
+        if not self.is_running():
+            self.set_status('')
+            return
+
+        i = self.counter
+
+        before = i % self.size
+        after = (self.size - 1) - before
+
+        self.set_status('%s [%s=%s]' % (self.message, ' ' * before, ' ' * after))
+
+        if not after:
+            self.addend = -1
+        if not before:
+            self.addend = 1
+        self.counter += self.addend
+
+        sublime.set_timeout(lambda: self.run(), self.heartbeat)
