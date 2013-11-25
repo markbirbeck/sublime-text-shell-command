@@ -91,7 +91,7 @@ class SublimeHelperInsertTextCommand(sublime_plugin.TextCommand):
             self.view.insert(edit, pos, msg)
 
 
-# The command that is executed to erase text into a view:
+# The command that is executed to erase text in a view:
 #
 class SublimeHelperEraseTextCommand(sublime_plugin.TextCommand):
 
