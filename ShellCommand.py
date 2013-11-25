@@ -64,7 +64,7 @@ class ShellCommandCommand(SH.TextCommand):
         else:
             _C(command)
 
-    def run_shell_command(self, command=None, panel=False, title=None, syntax=None, refresh=False):
+    def run_shell_command(self, command=None, panel=False, title=None, syntax=None, refresh=False, working_dir=None):
 
         view = self.view
         window = view.window()
@@ -73,7 +73,8 @@ class ShellCommandCommand(SH.TextCommand):
             sublime.message_dialog('No command provided.')
             return
 
-        working_dir = self.get_working_dir()
+        if working_dir is None:
+            working_dir = self.get_working_dir()
 
         # Run the command and write any output to the buffer:
         #
