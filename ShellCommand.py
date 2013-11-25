@@ -163,8 +163,7 @@ class ShellCommandRefreshCommand(ShellCommandCommand):
                     console = view
 
                     console.set_read_only(False)
-                    region = sublime.Region(0, view.size())
-                    console.run_command('sublime_helper_erase_text', {'a': region.a, 'b': region.b})
+                    console.run_command('sublime_helper_clear_buffer')
                     console.run_command('sublime_helper_insert_text', {'pos': 0, 'msg': output})
                     console.set_read_only(True)
 

@@ -98,3 +98,13 @@ class SublimeHelperEraseTextCommand(sublime_plugin.TextCommand):
     def run(self, edit, a, b):
 
         self.view.erase(edit, sublime.Region(a, b))
+
+
+# The command that is executed to clear a buffer:
+#
+class SublimeHelperClearBufferCommand(sublime_plugin.TextCommand):
+
+    def run(self, edit):
+
+        view = self.view
+        view.run_command('sublime_helper_erase_text', {'a': 0, 'b': view.size()})
