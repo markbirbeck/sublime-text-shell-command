@@ -240,7 +240,7 @@ To change this behaviour use the 'wait for completion' flag.
 
 * Commands now *really are* run asynchronously. (@SirLenz0rlot)
   Fixes issue #2.
-* Add `shell_command_on_region` to alignt with Emacs version.
+* Add `shell_command_on_region` to align with Emacs version.
 
 2013-10-07 (v0.2.0)
 
