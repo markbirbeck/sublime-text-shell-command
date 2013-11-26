@@ -14,8 +14,21 @@ class ShellCommandCommand(SH.TextCommand):
         else:
             self.default_prompt = default_prompt
         self.data_key = 'ShellCommand'
+        self.output_written = False
 
-    def run(self, edit, command=None, command_prefix=None, prompt=None, region=False, arg_required=False, panel=False, title=None, syntax=None, refresh=False):
+    def run(self, edit, command=None, command_prefix=None, prompt=None, region=None, arg_required=None, panel=None, title=None, syntax=None, refresh=None, wait_for_completion=None):
+
+        if region is None:
+            region is False
+
+        if arg_required is None:
+            arg_required = False
+
+        if panel is None:
+            panel = False
+
+        if refresh is None:
+            refresh = False
 
         arg = None
 
@@ -27,7 +40,7 @@ class ShellCommandCommand(SH.TextCommand):
 
             if arg == '':
                 if arg_required is True:
-                    SH.error_message('This command requires a parameter.')
+                    sublime.message_dialog('This command requires a parameter.')
                     return
 
         # Setup a closure to run the command:
@@ -40,7 +53,7 @@ class ShellCommandCommand(SH.TextCommand):
             if arg is not None:
                 command = command + ' ' + arg
 
-            self.run_shell_command(command, panel=panel, title=title, syntax=syntax, refresh=refresh)
+            self.run_shell_command(command, panel=panel, title=title, syntax=syntax, refresh=refresh, wait_for_completion=wait_for_completion)
 
         # If no command is specified then we prompt for one, otherwise
         # we can just execute the command:
@@ -52,83 +65,55 @@ class ShellCommandCommand(SH.TextCommand):
         else:
             _C(command)
 
-    def run_shell_command(self, command=None, panel=False, title=None, syntax=None, refresh=False):
+    def run_shell_command(self, command=None, panel=False, title=None, syntax=None, refresh=False, console=None, working_dir=None, wait_for_completion=None):
 
         view = self.view
         window = view.window()
+        settings = sublime.load_settings('ShellCommand.sublime-settings')
 
         if command is None:
-            SH.error_message('No command provided.')
+            sublime.message_dialog('No command provided.')
             return
 
-        working_dir = self.get_working_dir()
+        if working_dir is None:
+            working_dir = self.get_working_dir()
 
         # Run the command and write any output to the buffer:
         #
+        output_target = SH.OutputTarget(window, self.data_key, command, working_dir, title=title, syntax=syntax, panel=panel, console=console)
+        message = self.default_prompt + ': (' + ''.join(command)[:20] + ')'
+        progress = SH.ProgressDisplay(output_target, message, message,
+                                      settings.get('progress_display_heartbeat'))
+
         def _C(output):
 
-            output = output.strip()
-            if output == '':
-                settings = sublime.load_settings('ShellCommand.sublime-settings')
-                show_message = settings.get('show_success_but_no_output_message')
-                if show_message:
-                    output = settings.get('success_but_no_output_message')
-
-            # If we didn't get any output then don't do anything:
-            #
-            if output != '':
-                # If a panel has been requested then create one and show it,
-                # otherwise create a new buffer, and set its caption:
+            if output is not None:
+                output_target.append_text(output)
+                self.output_written = True
+                progress.start()
+            else:
+                # If there has been no output:
                 #
-                if panel is True:
-                    console = window.get_output_panel('ShellCommand')
-                    window.run_command('show_panel', {'panel': 'output.ShellCommand'})
-                else:
-                    console = window.new_file()
-                    caption = title if title else '*Shell Command Output*'
-                    console.set_name(caption)
+                if self.output_written is False:
+                    show_message = settings.get('show_success_but_no_output_message')
+                    if show_message:
+                        output = settings.get('success_but_no_output_message')
 
-                # Indicate that this buffer is a scratch buffer:
+                # Check whether the initiating view needs refreshing:
                 #
-                console.set_scratch(True)
+                if refresh is True:
+                    view.run_command('shell_command_refresh')
 
-                # Set the syntax for the output:
-                #
-                if syntax is not None:
-                    resources = sublime.find_resources(syntax + '.tmLanguage')
-                    console.set_syntax_file(resources[0])
+                progress.stop()
 
-                # Insert the output into the buffer:
-                #
-                console.set_read_only(False)
-                console.run_command('sublime_helper_insert_text', {'pos': 0, 'msg': output})
-                console.set_read_only(True)
-
-                # Set a flag on the view that we can use in key bindings:
-                #
-                settings = console.settings()
-                settings.set(self.data_key, True)
-
-                # Also, save the command and working directory for later,
-                # since we may need to refresh the panel/window:
-                #
-                data = {
-                    'command': command,
-                    'working_dir': working_dir
-                }
-                settings.set(self.data_key + '_data', data)
-
-            if refresh is True:
-                view.run_command('shell_command_refresh')
-
-        OsShell.process(command, _C, working_dir=working_dir)
+        OsShell.process(command, _C, working_dir=working_dir, wait_for_completion=wait_for_completion)
 
 
 class ShellCommandOnRegionCommand(ShellCommandCommand):
 
-    def run(self, edit, command=None, command_prefix=None, prompt=None, arg_required=False, panel=False, title=None, syntax=None, refresh=False):
+    def run(self, edit, command=None, command_prefix=None, prompt=None, arg_required=None, panel=None, title=None, syntax=None, refresh=None):
 
-        ShellCommandCommand.run(self, edit, command=command, command_prefix=command_prefix, prompt=prompt, region=True, arg_required=arg_required, panel=panel, title=title, syntax=syntax, refresh=refresh)
+        ShellCommandCommand.run(self, edit, command=command, command_prefix=command_prefix, prompt=prompt, region=True, arg_required=True, panel=panel, title=title, syntax=syntax, refresh=refresh)
 
 
 # Refreshing a shell command simply involves re-running the original command:
@@ -137,26 +122,16 @@ class ShellCommandRefreshCommand(ShellCommandCommand):
 
     def run(self, edit, callback=None):
 
-        view = self.view
+        console = self.view
 
-        settings = view.settings()
+        settings = console.settings()
         if settings.has(self.data_key):
             data = settings.get(self.data_key + '_data', None)
             if data is not None:
 
-                # Create a local function that will re-write the buffer contents:
-                #
-                def _C(output, **kwargs):
+                console.set_read_only(False)
+                console.run_command('sublime_helper_clear_buffer')
+                console.set_read_only(True)
 
-                    console = view
+                self.run_shell_command(command=data['command'], console=console, working_dir=data['working_dir'])
 
-                    console.set_read_only(False)
-                    region = sublime.Region(0, view.size())
-                    console.run_command('sublime_helper_erase_text', {'a': region.a, 'b': region.b})
-                    console.run_command('sublime_helper_insert_text', {'pos': 0, 'msg': output})
-                    console.set_read_only(True)
-
-                    if callback is not None:
-                        callback()
-
-                OsShell.process(data['command'], _C, working_dir=data['working_dir'])

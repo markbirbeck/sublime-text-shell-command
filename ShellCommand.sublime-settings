@@ -1,5 +1,5 @@
 {
-  "version": "0.3.0"
+  "version": "0.4.0"
 
   /**
    * The default behaviour in Emacs when there is no output from a successful
@@ -10,4 +10,6 @@
 , "success_but_no_output_message": "Shell command succeeded with no output"
 
 , "show_success_but_no_output_message": false
+
+, "progress_display_heartbeat": 500
 }

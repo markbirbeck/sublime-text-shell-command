@@ -5,7 +5,7 @@
      */
 
     "keys": ["alt+shift+1"],
-    "command": "shell_command",
+    "command": "shell_command"
   },
   {
     /**

@@ -2,17 +2,20 @@ import os
 import shlex
 import subprocess
 import threading
+import select
+
+import sublime
 
 from . import SublimeHelper as SH
 
 
-def process(commands, callback=None, working_dir=None, **kwargs):
+def process(commands, callback=None, working_dir=None, wait_for_completion=None, **kwargs):
 
     # If there's no callback method then just return the output as
     # a string:
     #
     if callback is None:
-        return _process(commands, working_dir=working_dir, **kwargs)
+        return _process(commands, working_dir=working_dir, wait_for_completion=wait_for_completion, **kwargs)
 
     # If there is a callback then run this asynchronously:
     #
@@ -20,13 +23,17 @@ def process(commands, callback=None, working_dir=None, **kwargs):
         thread = threading.Thread(target=_process, kwargs={
             'commands': commands,
             'callback': callback,
-            'working_dir': working_dir
+            'working_dir': working_dir,
+            'wait_for_completion': wait_for_completion
         })
         thread.start()
 
 
-def _process(commands, callback=None, working_dir=None, **kwargs):
+def _process(commands, callback=None, working_dir=None, wait_for_completion=None, **kwargs):
     '''Process one or more OS commands.'''
+
+    if wait_for_completion is None:
+        wait_for_completion = False
 
     # We're expecting a list of commands, so if we only have one, convert
     # it to a list:
@@ -65,9 +72,36 @@ def _process(commands, callback=None, working_dir=None, **kwargs):
                                     stderr=subprocess.STDOUT,
                                     cwd=working_dir,
                                     startupinfo=startupinfo)
-            output, _ = proc.communicate()
 
-            results += output.decode()
+            # We're going to keep polling the command and either:
+            #
+            #   1. we get None to tell us that the command is still running, or;
+            #   2. we get a return code to indicate that the command has finished.
+            #
+            return_code = None
+            while return_code is None:
+                return_code = proc.poll()
+
+                # If there's no error then see what we got from the command:
+                #
+                if return_code is None or return_code == 0:
+                    r, _, _ = select.select([proc.stdout], [], [])
+                    if r:
+                        # Process whatever output we can get:
+                        #
+                        output = True
+                        while output:
+                            output = proc.stdout.readline().decode()
+
+                            # If the caller wants everything in one go, or
+                            # there is no callback function, then batch up
+                            # the output. Otherwise pass it back to the
+                            # caller as it becomes available:
+                            #
+                            if wait_for_completion is True or callback is None:
+                                results += output
+                            else:
+                                SH.main_thread(callback, output, **kwargs)
 
         except subprocess.CalledProcessError as e:
 
@@ -76,16 +110,20 @@ def _process(commands, callback=None, working_dir=None, **kwargs):
         except OSError as e:
 
             if e.errno == 2:
-                SH.error_message('Command not found\n\nCommand is: %s' % command)
+                sublime.message_dialog('Command not found\n\nCommand is: %s' % command)
             else:
                 raise e
 
-    # Concatenate all of the results and then either return the value
-    # or pass the value to the callback:
+    # Concatenate all of the results and return the value. If we've been
+    # using the callback then just make one last call with 'None' to indicate
+    # that we're finished:
     #
     result = ''.join(results)
 
     if callback is None:
         return result
 
-    SH.main_thread(callback, result, **kwargs)
+    if wait_for_completion is True:
+        SH.main_thread(callback, result, **kwargs)
+
+    SH.main_thread(callback, None, **kwargs)

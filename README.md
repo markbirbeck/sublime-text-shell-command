@@ -214,16 +214,39 @@ If we then have two further shell commands -- one that creates a new file, and o
 ]
 ```
 
+## Whether to wait for the command to complete
+
+By default long-running commands will update the buffer as and when data is available. For some short commands this can look a little jerky and it might be best to wait for the command to complete before updating the buffer. This can be achieved with the 'wait for completion' flag:
+
+```json
+[
+  {
+    "keys": ["ctrl+enter"],
+    "command": "shell_command",
+    "args": {
+      "wait_for_completion": true
+    }
+  }
+]
+```
+
 # Changelog
+
+2013-11-26 (v0.4.0)
+
+* Long-running commands will now update the buffer as and when data is available. For example, Grunt could be made to watch a project and update the buffer by running the command `grunt --no-color`. However, note that there is currently no way to terminate the process (see issue #10). Fixes issue #4.
+
+* To change the default behaviour for long running commands, use the 'wait for completion' flag.
 
 2013-10-07 (v0.3.0)
 
 * Commands now *really are* run asynchronously. (@SirLenz0rlot)
   Fixes issue #2.
+* Add `shell_command_on_region` to align with Emacs version.
 
 2013-10-07 (v0.2.0)
 
-* Some crucial text commands were not include (@bizoo).
+* Some crucial text commands were not included (@bizoo).
   Fixes issue #1.
 * The region under the cursor was not being used as a parameter.
 
