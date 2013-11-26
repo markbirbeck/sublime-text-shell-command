@@ -232,9 +232,11 @@ By default long-running commands will update the buffer as and when data is avai
 
 # Changelog
 
-Long-running commands will now update the buffer as and when data is available. For example, Grunt could be made to watch a project and update the buffer by running the command `grunt --no-color`. However, note that there is currently no way to terminate the process (see issue #10).
+2013-11-26 (v0.4.0)
 
-To change this behaviour use the 'wait for completion' flag.
+* Long-running commands will now update the buffer as and when data is available. For example, Grunt could be made to watch a project and update the buffer by running the command `grunt --no-color`. However, note that there is currently no way to terminate the process (see issue #10). Fixes issue #4.
+
+* To change the default behaviour for long running commands, use the 'wait for completion' flag.
 
 2013-10-07 (v0.3.0)
 
@@ -244,7 +246,7 @@ To change this behaviour use the 'wait for completion' flag.
 
 2013-10-07 (v0.2.0)
 
-* Some crucial text commands were not include (@bizoo).
+* Some crucial text commands were not included (@bizoo).
   Fixes issue #1.
 * The region under the cursor was not being used as a parameter.
 
