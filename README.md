@@ -16,7 +16,7 @@ For example, `dired` shows a list of files and directories, and then allows user
 
 Similarly, the incredibly useful `magit` firstly shows the status of a Git repo and then allows files to be staged, unstaged, committed and diffed, whilst branches can be switched between, rebased, merged, pushed, pulled and more.
 
-So this extension is the factoring out of the core functionality on top of which tools like `dired` and `magit` can be built. A Sublime-style version of `magit` should be availble shortly.
+So this extension is the factoring out of the core functionality on top of which tools like `dired` and `magit` can be built. A Sublime-style version of `magit` should be available shortly.
 
 # Installation
 
@@ -143,7 +143,6 @@ Sometimes it's useful to provide a command prompt that relates to a specific she
     "command": "shell_command",
     "args": {
       "command": "git diff",
-      "region": true,
       "syntax": "Diff",
       "title": "Diff"
     },
@@ -162,7 +161,6 @@ This will run `git diff` against whatever file is selected, and then use the `Di
     "command": "shell_command",
     "args": {
       "command": "git diff",
-      "region": true,
       "syntax": "Diff",
       "title": "Diff"
     },
