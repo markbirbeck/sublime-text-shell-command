@@ -80,18 +80,20 @@ class ShellCommandCommand(SH.TextCommand):
 
         # Run the command and write any output to the buffer:
         #
-        output_target = SH.OutputTarget(window, self.data_key, command, working_dir, title=title, syntax=syntax, panel=panel, console=console)
         message = self.default_prompt + ': (' + ''.join(command)[:20] + ')'
-        progress = SH.ProgressDisplay(output_target, message, message,
-                                      settings.get('progress_display_heartbeat'))
+
+        self.finished = False
+        self.output_target = None
+        self.output_written = False
+        self.progress = None
 
         def _C(output):
 
-            if output is not None:
-                output_target.append_text(output)
-                self.output_written = True
-                progress.start()
-            else:
+            # If output is None then the command has finished:
+            #
+            if output is None:
+                self.finished = True
+
                 # If there has been no output:
                 #
                 if self.output_written is False:
@@ -104,7 +106,44 @@ class ShellCommandCommand(SH.TextCommand):
                 if refresh is True:
                     view.run_command('shell_command_refresh')
 
-                progress.stop()
+                # If we have a progress bar then stop it:
+                #
+                if self.progress is not None:
+                    self.progress.stop()
+
+            # If there is something to output...
+            #
+            if output is not None:
+
+                # ...only allow blank lines if something else has already been
+                # written:
+                #
+                if self.output_written is True or len(output.strip()) > 0:
+
+                    # If no output window has been created yet then create one now:
+                    #
+                    if self.output_target is None:
+                        self.output_target = SH.OutputTarget(window,
+                                                             self.data_key,
+                                                             command,
+                                                             working_dir,
+                                                             title=title,
+                                                             syntax=syntax,
+                                                             panel=panel,
+                                                             console=console)
+
+                        # Start a progress bar going, too:
+                        #
+                        if self.progress is None and self.finished is False:
+                            self.progress = SH.ProgressDisplay(self.output_target, message, message,
+                              settings.get('progress_display_heartbeat'))
+                            self.progress.start()
+
+                    # Append our output to whatever buffer is being used, and
+                    # track that some output has now been written:
+                    #
+                    self.output_target.append_text(output)
+                    self.output_written = True
 
         OsShell.process(command, _C, working_dir=working_dir, wait_for_completion=wait_for_completion)
 
