@@ -85,7 +85,13 @@ class ShellCommandCommand(SH.TextCommand):
         self.finished = False
         self.output_target = None
         self.output_written = False
-        self.progress = None
+
+        # Start our progress bar in the initiating window. If a new window
+        # gets opened then the progress bar will get moved to that:
+        #
+        self.progress = SH.ProgressDisplay(view, message, message,
+          settings.get('progress_display_heartbeat'))
+        self.progress.start()
 
         def _C(output):
 
@@ -106,10 +112,9 @@ class ShellCommandCommand(SH.TextCommand):
                 if refresh is True:
                     view.run_command('shell_command_refresh')
 
-                # If we have a progress bar then stop it:
+                # Stop the progress bar:
                 #
-                if self.progress is not None:
-                    self.progress.stop()
+                self.progress.stop()
 
             # If there is something to output...
             #
@@ -132,9 +137,10 @@ class ShellCommandCommand(SH.TextCommand):
                                                              panel=panel,
                                                              console=console)
 
-                        # Start a progress bar going, too:
+                        # Switch our progress bar to the new window:
                         #
-                        if self.progress is None and self.finished is False:
+                        if self.finished is False:
+                            self.progress.stop()
                             self.progress = SH.ProgressDisplay(self.output_target, message, message,
                               settings.get('progress_display_heartbeat'))
                             self.progress.start()
