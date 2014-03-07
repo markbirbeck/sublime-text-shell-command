@@ -47,7 +47,7 @@ Note that the following key bindings are for illustrative purposes only.
 ]
 ```
 
-This is the most basic use of the plugin, and will result in a prompt being provided to the user, into which any string can be typed. On pressing `[ENTER]` the string will be processed as a command and the output will be rendered in a new view. The buffer in the view is read only.
+This is the most basic use of the plugin, and will result in a prompt being provided to the user, into which any string can be typed. On pressing `[ENTER]` the string will be processed as a shell command and the output will be rendered in a new view. The buffer in the view is read only.
 
 ## Change the prompt caption and the output window title
 
