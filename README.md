@@ -32,6 +32,16 @@ The built-in bindings are based on similar functionality for Emacs (see [Execute
 
 In addition to this it's possible to customise the behaviour for many different scenarios.
 
+# Configuration Settings
+
+## show_success_but_no_output_message
+
+Indicates whether to show a message when the shell command returns no output, or the output is just whitespace. The default value is `False`, i.e., no window is created if the command doesn't return anything.
+
+## success_but_no_output_message
+
+This is the message to show in the window or panel if the `show_success_but_no_output_message` value is set to `True`. The default value copies the equivalent from Emacs, i.e., "Shell command succeeded with no output".
+
 # Examples
 
 Note that the following key bindings are for illustrative purposes only.
