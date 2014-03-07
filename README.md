@@ -16,7 +16,7 @@ For example, `dired` shows a list of files and directories, and then allows user
 
 Similarly, the incredibly useful `magit` firstly shows the status of a Git repo and then allows files to be staged, unstaged, committed and diffed, whilst branches can be switched between, rebased, merged, pushed, pulled and more.
 
-So this extension is the factoring out of the core functionality on top of which tools like `dired` and `magit` can be built. A Sublime-style version of `magit` should be availble shortly.
+So this extension is the factoring out of the core functionality on top of which tools like `dired` and `magit` can be built. A Sublime-style version of `magit` should be available shortly.
 
 # Installation
 
@@ -31,6 +31,16 @@ The built-in bindings are based on similar functionality for Emacs (see [Execute
 * `g` in a view that is showing the output of a shell command will cause the command to be run again.
 
 In addition to this it's possible to customise the behaviour for many different scenarios.
+
+# Configuration Settings
+
+## show_success_but_no_output_message
+
+Indicates whether to show a message when the shell command returns no output, or the output is just whitespace. The default value is `False`, i.e., no window is created if the command doesn't return anything.
+
+## success_but_no_output_message
+
+This is the message to show in the window or panel if the `show_success_but_no_output_message` value is set to `True`. The default value copies the equivalent from Emacs, i.e., "Shell command succeeded with no output".
 
 # Examples
 
@@ -47,7 +57,7 @@ Note that the following key bindings are for illustrative purposes only.
 ]
 ```
 
-This is the most basic use of the plugin, and will result in a prompt being provided to the user, into which any string can be typed. On pressing `[ENTER]` the string will be processed as a command and the output will be rendered in a new view. The buffer in the view is read only.
+This is the most basic use of the plugin, and will result in a prompt being provided to the user, into which any string can be typed. On pressing `[ENTER]` the string will be processed as a shell command and the output will be rendered in a new view. The buffer in the view is read only.
 
 ## Change the prompt caption and the output window title
 
@@ -143,7 +153,6 @@ Sometimes it's useful to provide a command prompt that relates to a specific she
     "command": "shell_command",
     "args": {
       "command": "git diff",
-      "region": true,
       "syntax": "Diff",
       "title": "Diff"
     },
@@ -162,7 +171,6 @@ This will run `git diff` against whatever file is selected, and then use the `Di
     "command": "shell_command",
     "args": {
       "command": "git diff",
-      "region": true,
       "syntax": "Diff",
       "title": "Diff"
     },
@@ -231,6 +239,10 @@ By default long-running commands will update the buffer as and when data is avai
 ```
 
 # Changelog
+
+2014-03-07 (v0.5.0)
+
+* If there is no output from a command then no panel or window is created. This used to work, until async commands were implemented, but now it really _does_ work. (@aldanor) Fixes issue #11.
 
 2013-11-26 (v0.4.0)
 
