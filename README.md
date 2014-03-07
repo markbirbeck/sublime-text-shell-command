@@ -32,6 +32,16 @@ The built-in bindings are based on similar functionality for Emacs (see [Execute
 
 In addition to this it's possible to customise the behaviour for many different scenarios.
 
+# Configuration Settings
+
+## show_success_but_no_output_message
+
+Indicates whether to show a message when the shell command returns no output, or the output is just whitespace. The default value is `False`, i.e., no window is created if the command doesn't return anything.
+
+## success_but_no_output_message
+
+This is the message to show in the window or panel if the `show_success_but_no_output_message` value is set to `True`. The default value copies the equivalent from Emacs, i.e., "Shell command succeeded with no output".
+
 # Examples
 
 Note that the following key bindings are for illustrative purposes only.
@@ -47,7 +57,7 @@ Note that the following key bindings are for illustrative purposes only.
 ]
 ```
 
-This is the most basic use of the plugin, and will result in a prompt being provided to the user, into which any string can be typed. On pressing `[ENTER]` the string will be processed as a command and the output will be rendered in a new view. The buffer in the view is read only.
+This is the most basic use of the plugin, and will result in a prompt being provided to the user, into which any string can be typed. On pressing `[ENTER]` the string will be processed as a shell command and the output will be rendered in a new view. The buffer in the view is read only.
 
 ## Change the prompt caption and the output window title
 
