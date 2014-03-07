@@ -240,6 +240,10 @@ By default long-running commands will update the buffer as and when data is avai
 
 # Changelog
 
+2014-03-07 (v0.5.0)
+
+* If there is no output from a command then no panel or window is created. This used to work, until async commands were implemented, but now it really _does_ work. (@aldanor) Fixes issue #11.
+
 2013-11-26 (v0.4.0)
 
 * Long-running commands will now update the buffer as and when data is available. For example, Grunt could be made to watch a project and update the buffer by running the command `grunt --no-color`. However, note that there is currently no way to terminate the process (see issue #10). Fixes issue #4.
