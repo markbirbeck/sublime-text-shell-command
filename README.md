@@ -240,6 +240,10 @@ By default long-running commands will update the buffer as and when data is avai
 
 # Changelog
 
+2014-03-10 (v0.6.0)
+
+* The working directory is no longer derived primarily from the currently selected file. Instead any directory that has been saved in the view settings, or the project directory or the first open folder, is used. (@mikeerickson) Fixes issue #6.
+
 2014-03-07 (v0.5.0)
 
 * If there is no output from a command then no panel or window is created. This used to work, until async commands were implemented, but now it really _does_ work. (@aldanor) Fixes issue #11.
