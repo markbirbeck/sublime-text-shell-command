@@ -52,6 +52,17 @@ class TextCommand(sublime_plugin.TextCommand):
 
         if view is not None:
 
+            # If there is a working directory defined in the data settings then use
+            # it:
+            #
+            if self.data_key is not None:
+                settings = view.settings()
+                if settings.has(self.data_key):
+                    data = settings.get(self.data_key + '_data', None)
+                    if data is not None:
+                        if 'working_dir' in data:
+                            return data['working_dir']
+
             window = view.window()
             if window is not None:
 
