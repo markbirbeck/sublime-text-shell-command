@@ -52,13 +52,16 @@ class TextCommand(sublime_plugin.TextCommand):
 
         if view is not None:
 
-            # If there is a file in the active view then use it to work out
-            # a working directory:
+            # If there is a working directory defined in the data settings then use
+            # it:
             #
-            file_name = view.file_name()
-            if file_name is not None:
-                dirname, _ = os.path.split(os.path.abspath(file_name))
-                return dirname
+            if self.data_key is not None:
+                settings = view.settings()
+                if settings.has(self.data_key):
+                    data = settings.get(self.data_key + '_data', None)
+                    if data is not None:
+                        if 'working_dir' in data:
+                            return data['working_dir']
 
             window = view.window()
             if window is not None:
@@ -77,6 +80,14 @@ class TextCommand(sublime_plugin.TextCommand):
                 folders = window.folders()
                 if folders is not None:
                     return folders[0]
+
+            # If there is a file in the active view then use it to work out
+            # a working directory:
+            #
+            file_name = view.file_name()
+            if file_name is not None:
+                dirname, _ = os.path.split(os.path.abspath(file_name))
+                return dirname
 
         return ''
 
