@@ -151,7 +151,7 @@ class ShellCommandCommand(SH.TextCommand):
                     self.output_target.append_text(output)
                     self.output_written = True
 
-        OsShell.process(command, _C, working_dir=working_dir, wait_for_completion=wait_for_completion)
+        OsShell.process(command, _C, settings=settings, working_dir=working_dir, wait_for_completion=wait_for_completion)
 
 
 class ShellCommandOnRegionCommand(ShellCommandCommand):
