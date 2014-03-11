@@ -9,13 +9,13 @@ import sublime
 from . import SublimeHelper as SH
 
 
-def process(commands, callback=None, working_dir=None, wait_for_completion=None, **kwargs):
+def process(commands, callback=None, settings=None, working_dir=None, wait_for_completion=None, **kwargs):
 
     # If there's no callback method then just return the output as
     # a string:
     #
     if callback is None:
-        return _process(commands, working_dir=working_dir, wait_for_completion=wait_for_completion, **kwargs)
+        return _process(commands, settings=settings, working_dir=working_dir, wait_for_completion=wait_for_completion, **kwargs)
 
     # If there is a callback then run this asynchronously:
     #
@@ -23,13 +23,14 @@ def process(commands, callback=None, working_dir=None, wait_for_completion=None,
         thread = threading.Thread(target=_process, kwargs={
             'commands': commands,
             'callback': callback,
+            'settings': settings,
             'working_dir': working_dir,
             'wait_for_completion': wait_for_completion
         })
         thread.start()
 
 
-def _process(commands, callback=None, working_dir=None, wait_for_completion=None, **kwargs):
+def _process(commands, callback=None, settings=None, working_dir=None, wait_for_completion=None, **kwargs):
     '''Process one or more OS commands.'''
 
     if wait_for_completion is None:
@@ -59,10 +60,16 @@ def _process(commands, callback=None, working_dir=None, wait_for_completion=None
     #
     for command in commands:
 
-        # Split the command properly, in case it has options and
-        # parameters:
+        # See if there are any interactive shell settings that we could use:
         #
-        command = shlex.split(command)
+        bash_env = None
+        if settings is not None and settings.has('shell_configuration_file'):
+            bash_env = settings.get('shell_configuration_file')
+        else:
+            bash_env = os.getenv('ENV')
+
+        if bash_env is not None:
+            command = '. {} && {}'.format(bash_env, command)
 
         try:
 
@@ -70,6 +77,7 @@ def _process(commands, callback=None, working_dir=None, wait_for_completion=None
                                     stdin=subprocess.PIPE,
                                     stdout=subprocess.PIPE,
                                     stderr=subprocess.STDOUT,
+                                    shell=True,
                                     cwd=working_dir,
                                     startupinfo=startupinfo)
 
