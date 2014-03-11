@@ -240,6 +240,10 @@ By default long-running commands will update the buffer as and when data is avai
 
 # Changelog
 
+2014-03-11 (v0.7.0)
+
+* A shell configuration script can now be executed before commands. The script is either set in `$ENV` (as per `bash` conventions) or using the `shell_configuration_file` configuration setting. (@mikeerickson) Fixes issue #8.
+ 
 2014-03-10 (v0.6.0)
 
 * The working directory is no longer derived primarily from the currently selected file. Instead any directory that has been saved in the view settings, or the project directory or the first open folder, is used. (@mikeerickson) Fixes issue #6.
