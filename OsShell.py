@@ -75,6 +75,7 @@ def _process(commands, callback=None, settings=None, working_dir=None, wait_for_
 
             proc = subprocess.Popen(command,
                                     stdin=subprocess.PIPE,
+                                    universal_newlines=True,
                                     stdout=subprocess.PIPE,
                                     stderr=subprocess.STDOUT,
                                     shell=True,
@@ -99,7 +100,7 @@ def _process(commands, callback=None, settings=None, working_dir=None, wait_for_
                         #
                         output = True
                         while output:
-                            output = proc.stdout.readline().decode()
+                            output = proc.stdout.readline()
 
                             # If the caller wants everything in one go, or
                             # there is no callback function, then batch up
