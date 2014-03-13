@@ -16,7 +16,7 @@ class ShellCommandCommand(SH.TextCommand):
         self.data_key = 'ShellCommand'
         self.output_written = False
 
-    def run(self, edit, command=None, command_prefix=None, prompt=None, region=None, arg_required=None, panel=None, title=None, syntax=None, refresh=None, wait_for_completion=None):
+    def run(self, edit, command=None, command_prefix=None, prompt=None, region=None, arg_required=None, stdin=None, panel=None, title=None, syntax=None, refresh=None, wait_for_completion=None):
 
         if region is None:
             region is False
@@ -32,8 +32,9 @@ class ShellCommandCommand(SH.TextCommand):
 
         arg = None
 
-        # If regions should be used then work them out, and append
-        # them to the command:
+        # If regions should be used for the command then create an
+        # argument from current selection, ready to append to the
+        # command:
         #
         if region is True:
             arg = self.get_region().strip()
@@ -53,7 +54,7 @@ class ShellCommandCommand(SH.TextCommand):
             if arg is not None:
                 command = command + ' ' + arg
 
-            self.run_shell_command(command, panel=panel, title=title, syntax=syntax, refresh=refresh, wait_for_completion=wait_for_completion)
+            self.run_shell_command(command, stdin=stdin, panel=panel, title=title, syntax=syntax, refresh=refresh, wait_for_completion=wait_for_completion)
 
         # If no command is specified then we prompt for one, otherwise
         # we can just execute the command:
@@ -65,7 +66,7 @@ class ShellCommandCommand(SH.TextCommand):
         else:
             _C(command)
 
-    def run_shell_command(self, command=None, panel=False, title=None, syntax=None, refresh=False, console=None, working_dir=None, wait_for_completion=None):
+    def run_shell_command(self, command=None, stdin=None, panel=False, title=None, syntax=None, refresh=False, console=None, working_dir=None, wait_for_completion=None):
 
         view = self.view
         window = view.window()
@@ -151,7 +152,7 @@ class ShellCommandCommand(SH.TextCommand):
                     self.output_target.append_text(output)
                     self.output_written = True
 
-        OsShell.process(command, _C, settings=settings, working_dir=working_dir, wait_for_completion=wait_for_completion)
+        OsShell.process(command, _C, stdin=stdin, settings=settings, working_dir=working_dir, wait_for_completion=wait_for_completion)
 
 
 class ShellCommandOnRegionCommand(ShellCommandCommand):

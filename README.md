@@ -144,6 +144,23 @@ If the `region` option is set then any active selections are appended to the com
 
 Sometimes it's useful to provide a command prompt that relates to a specific shell command, and the user would then only need to provide the parameters. This example creates a prompt labelled 'Git Command', into which the user need only type the Git command itself, and any parameters. For example, to run `git status`, only `status` would need to be entered into the prompt.
 
+## Feeding a string of text to a command
+
+```json
+[
+  {
+    "caption": "Word Count",
+    "command": "shell_command",
+    "args": {
+      "stdin": "A contrived example. The output should be 8",
+      "command": "wc -w"
+    }
+  }
+]
+```
+
+To pass a string of text to a command use the `stdin` argument.
+
 ## Applying a syntax definition to the output
 
 ```json
