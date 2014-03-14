@@ -276,6 +276,10 @@ By default long-running commands will update the buffer as and when data is avai
 
 # Changelog
 
+2014-03-14 (v0.8.0)
+
+* Any text selected in the current buffer, or the entire buffer, can now be fed to a command as standard input, rather than as an argument. (@pcantrell) Fixes issue #5.
+
 2014-03-11 (v0.7.0)
 
 * A shell configuration script can now be executed before commands. The script is either set in `$ENV` (as per `bash` conventions) or using the `shell_configuration_file` configuration setting. (@mikeerickson) Fixes issue #8.
