@@ -32,6 +32,10 @@ The built-in bindings are based on similar functionality for Emacs (see [Execute
 
 In addition to this it's possible to customise the behaviour for many different scenarios.
 
+# Commands
+
+There is one command provided in the Command Pallette, which is `Shell Command`. This provides a prompt into which a shell command can be entered. Any selections in the active view will be fed to the command as standard input. If there are no selections then the entire buffer will be passed through.
+
 # Configuration Settings
 
 ## show_success_but_no_output_message
