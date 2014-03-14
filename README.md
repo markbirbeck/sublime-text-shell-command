@@ -127,6 +127,21 @@ To run a particular shell command use the `command` parameter.
 
 If the `region` option is set to 'arg' then any active selections are appended to the command as arguments. If there are no active selections then the word under the cursor is used. In this example if there were no selections, and no word under the cursor then the `ls -al` command would be run as is, most likely giving the contents of the project directory. But if a directory name were under the cursor, or was selected, then its contents would be listed.
 
+```json
+[
+  {
+    "caption": "Word Count",
+    "command": "shell_command",
+    "args": {
+      "command": "wc -w",
+      "region": "stdin"
+    }
+  }
+]
+```
+
+If the `region` option is set to 'stdin' then any active selections are piped to the command as standard input (stdin). If there are no active selections then the entire buffer is used. In this example if there were no selections, and no word under the cursor then the `wc -w` command would count the number of words in the current buffer.
+
 ## Providing a common command prefix
 
 ```json

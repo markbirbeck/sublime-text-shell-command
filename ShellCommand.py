@@ -32,11 +32,11 @@ class ShellCommandCommand(SH.TextCommand):
         if refresh is None:
             refresh = False
 
+        # If regions should be used as arguments for the command then
+        # create an argument from the current selection, ready to
+        # append to the command:
+        #
         arg = None
-
-        # If regions should be used for the command then create an
-        # argument from current selection, ready to append to the
-        # command:
         if region == 'arg':
             arg = self.get_region().strip()
 
@@ -44,6 +44,12 @@ class ShellCommandCommand(SH.TextCommand):
                 if arg_required is True:
                     sublime.message_dialog('This command requires a parameter.')
                     return
+
+        # If regions should be used as input to the command then
+        # pipe the current selection to the command as stdin:
+        #
+        if region == 'stdin' and stdin is None:
+            stdin = self.get_region(can_select_entire_buffer=True)
 
         # Setup a closure to run the command:
         #
