@@ -18,8 +18,10 @@ class ShellCommandCommand(SH.TextCommand):
 
     def run(self, edit, command=None, command_prefix=None, prompt=None, region=None, arg_required=None, stdin=None, panel=None, title=None, syntax=None, refresh=None, wait_for_completion=None):
 
-        if region is None:
-            region is False
+        # Map previous use of 'region' parameter:
+        #
+        if region is True:
+            region = 'arg'
 
         if arg_required is None:
             arg_required = False
@@ -35,8 +37,7 @@ class ShellCommandCommand(SH.TextCommand):
         # If regions should be used for the command then create an
         # argument from current selection, ready to append to the
         # command:
-        #
-        if region is True:
+        if region == 'arg':
             arg = self.get_region().strip()
 
             if arg == '':
@@ -159,7 +160,7 @@ class ShellCommandOnRegionCommand(ShellCommandCommand):
 
     def run(self, edit, command=None, command_prefix=None, prompt=None, arg_required=None, panel=None, title=None, syntax=None, refresh=None):
 
-        ShellCommandCommand.run(self, edit, command=command, command_prefix=command_prefix, prompt=prompt, region=True, arg_required=True, panel=panel, title=title, syntax=syntax, refresh=refresh)
+        ShellCommandCommand.run(self, edit, command=command, command_prefix=command_prefix, prompt=prompt, region='arg', arg_required=True, panel=panel, title=title, syntax=syntax, refresh=refresh)
 
 
 # Refreshing a shell command simply involves re-running the original command:

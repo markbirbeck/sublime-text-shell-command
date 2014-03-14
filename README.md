@@ -119,13 +119,13 @@ To run a particular shell command use the `command` parameter.
     "command": "shell_command",
     "args": {
       "command": "ls -al",
-      "region": true
+      "region": "arg"
     }
   }
 ]
 ```
 
-If the `region` option is set then any active selections are appended to the command. If there are no active selections then the word under the cursor is used. In this example if there were no selections, and no word under the cursor then the `ls -al` command would be run as is, most likely giving the contents of the project directory. But if a directory name were under the cursor, or was selected, then its contents would be listed.
+If the `region` option is set to 'arg' then any active selections are appended to the command as arguments. If there are no active selections then the word under the cursor is used. In this example if there were no selections, and no word under the cursor then the `ls -al` command would be run as is, most likely giving the contents of the project directory. But if a directory name were under the cursor, or was selected, then its contents would be listed.
 
 ## Providing a common command prefix
 
@@ -232,7 +232,7 @@ If we then have two further shell commands -- one that creates a new file, and o
     "args": {
       "command": "rm",
       "arg_required": true,
-      "region": true,
+      "region": "arg",
       "refresh": true
     }
   },
