@@ -14,7 +14,7 @@ def main_thread(callback, *args, **kwargs):
 
 class TextCommand(sublime_plugin.TextCommand):
 
-    def get_region(self, view=None):
+    def get_region(self, view=None, can_select_entire_buffer=False):
         '''Get the value under the cursor, or cursors.'''
 
         value = ''
@@ -29,6 +29,13 @@ class TextCommand(sublime_plugin.TextCommand):
             # Get the selection:
             #
             selection = view.sel()
+
+            # If there is no selection then optionally use the entire buffer:
+            #
+            if can_select_entire_buffer is True:
+                if len(selection) == 1 and selection[0].empty():
+                    selection = [sublime.Region(0, view.size())]
+
             if selection is not None:
 
                 # For each region in the selection, either use it directly,

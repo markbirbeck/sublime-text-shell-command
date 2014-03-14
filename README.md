@@ -32,6 +32,10 @@ The built-in bindings are based on similar functionality for Emacs (see [Execute
 
 In addition to this it's possible to customise the behaviour for many different scenarios.
 
+# Commands
+
+There is one command provided in the Command Pallette, which is `Shell Command`. This provides a prompt into which a shell command can be entered. Any selections in the active view will be fed to the command as standard input. If there are no selections then the entire buffer will be passed through.
+
 # Configuration Settings
 
 ## show_success_but_no_output_message
@@ -119,13 +123,28 @@ To run a particular shell command use the `command` parameter.
     "command": "shell_command",
     "args": {
       "command": "ls -al",
-      "region": true
+      "region": "arg"
     }
   }
 ]
 ```
 
-If the `region` option is set then any active selections are appended to the command. If there are no active selections then the word under the cursor is used. In this example if there were no selections, and no word under the cursor then the `ls -al` command would be run as is, most likely giving the contents of the project directory. But if a directory name were under the cursor, or was selected, then its contents would be listed.
+If the `region` option is set to 'arg' then any active selections are appended to the command as arguments. If there are no active selections then the word under the cursor is used. In this example if there were no selections, and no word under the cursor then the `ls -al` command would be run as is, most likely giving the contents of the project directory. But if a directory name were under the cursor, or was selected, then its contents would be listed.
+
+```json
+[
+  {
+    "caption": "Word Count",
+    "command": "shell_command",
+    "args": {
+      "command": "wc -w",
+      "region": "stdin"
+    }
+  }
+]
+```
+
+If the `region` option is set to 'stdin' then any active selections are piped to the command as standard input (stdin). If there are no active selections then the entire buffer is used. In this example if there were no selections, and no word under the cursor then the `wc -w` command would count the number of words in the current buffer.
 
 ## Providing a common command prefix
 
@@ -143,6 +162,23 @@ If the `region` option is set then any active selections are appended to the com
 ```
 
 Sometimes it's useful to provide a command prompt that relates to a specific shell command, and the user would then only need to provide the parameters. This example creates a prompt labelled 'Git Command', into which the user need only type the Git command itself, and any parameters. For example, to run `git status`, only `status` would need to be entered into the prompt.
+
+## Feeding a string of text to a command
+
+```json
+[
+  {
+    "caption": "Word Count",
+    "command": "shell_command",
+    "args": {
+      "stdin": "A contrived example. The output should be 8",
+      "command": "wc -w"
+    }
+  }
+]
+```
+
+To pass a string of text to a command use the `stdin` argument.
 
 ## Applying a syntax definition to the output
 
@@ -215,7 +251,7 @@ If we then have two further shell commands -- one that creates a new file, and o
     "args": {
       "command": "rm",
       "arg_required": true,
-      "region": true,
+      "region": "arg",
       "refresh": true
     }
   },
@@ -239,6 +275,10 @@ By default long-running commands will update the buffer as and when data is avai
 ```
 
 # Changelog
+
+2014-03-14 (v0.8.0)
+
+* Any text selected in the current buffer, or the entire buffer, can now be fed to a command as standard input, rather than as an argument. (@pcantrell) Fixes issue #5.
 
 2014-03-11 (v0.7.0)
 

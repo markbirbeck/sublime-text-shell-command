@@ -1,0 +1,9 @@
+[
+  {
+    "caption": "Shell Command",
+    "command": "shell_command",
+    "args": {
+      "region": "stdin"
+    }
+  }
+]

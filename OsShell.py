@@ -9,13 +9,13 @@ import sublime
 from . import SublimeHelper as SH
 
 
-def process(commands, callback=None, settings=None, working_dir=None, wait_for_completion=None, **kwargs):
+def process(commands, callback=None, stdin=None, settings=None, working_dir=None, wait_for_completion=None, **kwargs):
 
     # If there's no callback method then just return the output as
     # a string:
     #
     if callback is None:
-        return _process(commands, settings=settings, working_dir=working_dir, wait_for_completion=wait_for_completion, **kwargs)
+        return _process(commands, stdin=stdin, settings=settings, working_dir=working_dir, wait_for_completion=wait_for_completion, **kwargs)
 
     # If there is a callback then run this asynchronously:
     #
@@ -23,6 +23,7 @@ def process(commands, callback=None, settings=None, working_dir=None, wait_for_c
         thread = threading.Thread(target=_process, kwargs={
             'commands': commands,
             'callback': callback,
+            'stdin': stdin,
             'settings': settings,
             'working_dir': working_dir,
             'wait_for_completion': wait_for_completion
@@ -30,7 +31,7 @@ def process(commands, callback=None, settings=None, working_dir=None, wait_for_c
         thread.start()
 
 
-def _process(commands, callback=None, settings=None, working_dir=None, wait_for_completion=None, **kwargs):
+def _process(commands, callback=None, stdin=None, settings=None, working_dir=None, wait_for_completion=None, **kwargs):
     '''Process one or more OS commands.'''
 
     if wait_for_completion is None:
@@ -75,12 +76,16 @@ def _process(commands, callback=None, settings=None, working_dir=None, wait_for_
 
             proc = subprocess.Popen(command,
                                     stdin=subprocess.PIPE,
+                                    universal_newlines=True,
                                     stdout=subprocess.PIPE,
                                     stderr=subprocess.STDOUT,
                                     shell=True,
                                     cwd=working_dir,
                                     startupinfo=startupinfo)
 
+            if stdin is not None:
+                proc.stdin.write(stdin)
+                proc.stdin.close();
             # We're going to keep polling the command and either:
             #
             #   1. we get None to tell us that the command is still running, or;
@@ -99,7 +104,7 @@ def _process(commands, callback=None, settings=None, working_dir=None, wait_for_
                         #
                         output = True
                         while output:
-                            output = proc.stdout.readline().decode()
+                            output = proc.stdout.readline()
 
                             # If the caller wants everything in one go, or
                             # there is no callback function, then batch up

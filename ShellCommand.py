@@ -16,10 +16,12 @@ class ShellCommandCommand(SH.TextCommand):
         self.data_key = 'ShellCommand'
         self.output_written = False
 
-    def run(self, edit, command=None, command_prefix=None, prompt=None, region=None, arg_required=None, panel=None, title=None, syntax=None, refresh=None, wait_for_completion=None):
+    def run(self, edit, command=None, command_prefix=None, prompt=None, region=None, arg_required=None, stdin=None, panel=None, title=None, syntax=None, refresh=None, wait_for_completion=None):
 
-        if region is None:
-            region is False
+        # Map previous use of 'region' parameter:
+        #
+        if region is True:
+            region = 'arg'
 
         if arg_required is None:
             arg_required = False
@@ -30,18 +32,24 @@ class ShellCommandCommand(SH.TextCommand):
         if refresh is None:
             refresh = False
 
-        arg = None
-
-        # If regions should be used then work them out, and append
-        # them to the command:
+        # If regions should be used as arguments for the command then
+        # create an argument from the current selection, ready to
+        # append to the command:
         #
-        if region is True:
+        arg = None
+        if region == 'arg':
             arg = self.get_region().strip()
 
             if arg == '':
                 if arg_required is True:
                     sublime.message_dialog('This command requires a parameter.')
                     return
+
+        # If regions should be used as input to the command then
+        # pipe the current selection to the command as stdin:
+        #
+        if region == 'stdin' and stdin is None:
+            stdin = self.get_region(can_select_entire_buffer=True)
 
         # Setup a closure to run the command:
         #
@@ -53,7 +61,7 @@ class ShellCommandCommand(SH.TextCommand):
             if arg is not None:
                 command = command + ' ' + arg
 
-            self.run_shell_command(command, panel=panel, title=title, syntax=syntax, refresh=refresh, wait_for_completion=wait_for_completion)
+            self.run_shell_command(command, stdin=stdin, panel=panel, title=title, syntax=syntax, refresh=refresh, wait_for_completion=wait_for_completion)
 
         # If no command is specified then we prompt for one, otherwise
         # we can just execute the command:
@@ -65,7 +73,7 @@ class ShellCommandCommand(SH.TextCommand):
         else:
             _C(command)
 
-    def run_shell_command(self, command=None, panel=False, title=None, syntax=None, refresh=False, console=None, working_dir=None, wait_for_completion=None):
+    def run_shell_command(self, command=None, stdin=None, panel=False, title=None, syntax=None, refresh=False, console=None, working_dir=None, wait_for_completion=None):
 
         view = self.view
         window = view.window()
@@ -151,14 +159,14 @@ class ShellCommandCommand(SH.TextCommand):
                     self.output_target.append_text(output)
                     self.output_written = True
 
-        OsShell.process(command, _C, settings=settings, working_dir=working_dir, wait_for_completion=wait_for_completion)
+        OsShell.process(command, _C, stdin=stdin, settings=settings, working_dir=working_dir, wait_for_completion=wait_for_completion)
 
 
 class ShellCommandOnRegionCommand(ShellCommandCommand):
 
     def run(self, edit, command=None, command_prefix=None, prompt=None, arg_required=None, panel=None, title=None, syntax=None, refresh=None):
 
-        ShellCommandCommand.run(self, edit, command=command, command_prefix=command_prefix, prompt=prompt, region=True, arg_required=True, panel=panel, title=title, syntax=syntax, refresh=refresh)
+        ShellCommandCommand.run(self, edit, command=command, command_prefix=command_prefix, prompt=prompt, region='arg', arg_required=True, panel=panel, title=title, syntax=syntax, refresh=refresh)
 
 
 # Refreshing a shell command simply involves re-running the original command:
