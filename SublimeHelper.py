@@ -85,7 +85,7 @@ class TextCommand(sublime_plugin.TextCommand):
                 # path of the first one:
                 #
                 folders = window.folders()
-                if folders is not None:
+                if folders:
                     return folders[0]
 
             # If there is a file in the active view then use it to work out
@@ -96,7 +96,7 @@ class TextCommand(sublime_plugin.TextCommand):
                 dirname, _ = os.path.split(os.path.abspath(file_name))
                 return dirname
 
-        return ''
+        return None
 
 
 # The command that is executed to insert text into a view:
