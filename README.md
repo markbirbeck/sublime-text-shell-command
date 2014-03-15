@@ -1,6 +1,6 @@
 # Introduction
 
-The `ShellCommand` plugin allows OS shell commands to be run and their output to be sent to buffers or panels.
+The `ShellCommand` plugin allows arbitrary shell commands to be run and their output to be sent to buffers or panels.
 
 It can:
 * run pretty much any shell command, either typed into a prompt or configured in key bindings and commands;
@@ -27,7 +27,7 @@ The package is available on [Package Control](https://sublime.wbond.net/).
 The built-in bindings are based on similar functionality for Emacs (see [Execute External Command](http://www.emacswiki.org/emacs/ExecuteExternalCommand)):
 
 * `alt+!` will show a prompt into which a shell command can be typed;
-* `alt+|` will use any selections or text under the cursor as input for a shell command;
+* `alt+|` will use any selections or text under the cursor as command-line parameters for a shell command;
 * `g` in a view that is showing the output of a shell command will cause the command to be run again.
 
 In addition to this it's possible to customise the behaviour for many different scenarios.
