@@ -280,6 +280,14 @@ By default long-running commands will update the buffer as and when data is avai
 
 # Changelog
 
+2014-03-20 (v0.10.0)
+
+* Passing a buffer with UTF-8 characters in as the stdin for a command caused the command to fail. (@markbirbeck) Fixes issue #16.
+
+2014-03-15 (v0.9.0)
+
+* Commands were failing if run in a window with no open folders or files. (@mrvoss) Fixes issue #14.
+
 2014-03-14 (v0.8.0)
 
 * Any text selected in the current buffer, or the entire buffer, can now be fed to a command as standard input, rather than as an argument. (@pcantrell) Fixes issue #5.
