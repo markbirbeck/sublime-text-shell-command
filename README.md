@@ -27,10 +27,14 @@ The package is available on [Package Control](https://sublime.wbond.net/).
 The built-in bindings are based on similar functionality for Emacs (see [Execute External Command](http://www.emacswiki.org/emacs/ExecuteExternalCommand)):
 
 * `alt+!` will show a prompt into which a shell command can be typed;
-* `alt+|` will use any selections or text under the cursor as command-line parameters for a shell command;
+* `alt+|` will also show a prompt, but will use any selections or text under the cursor (or the current file if nothing is selected) as standard input to the shell command (i.e., `stdin`);
 * `g` in a view that is showing the output of a shell command will cause the command to be run again.
 
 In addition to this it's possible to customise the behaviour for many different scenarios.
+
+# Shell Configuration Files
+
+For detailed information about using your shell configuration options see [Using a Shell Configuration File](../wiki/Using-a-Shell-Configuration-File).
 
 # Commands
 
