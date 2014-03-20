@@ -76,7 +76,6 @@ def _process(commands, callback=None, stdin=None, settings=None, working_dir=Non
 
             proc = subprocess.Popen(command,
                                     stdin=subprocess.PIPE,
-                                    universal_newlines=True,
                                     stdout=subprocess.PIPE,
                                     stderr=subprocess.STDOUT,
                                     shell=True,
@@ -84,7 +83,7 @@ def _process(commands, callback=None, stdin=None, settings=None, working_dir=Non
                                     startupinfo=startupinfo)
 
             if stdin is not None:
-                proc.stdin.write(stdin)
+                proc.stdin.write(stdin.encode('utf-8'))
                 proc.stdin.close();
             # We're going to keep polling the command and either:
             #
@@ -104,7 +103,7 @@ def _process(commands, callback=None, stdin=None, settings=None, working_dir=Non
                         #
                         output = True
                         while output:
-                            output = proc.stdout.readline()
+                            output = proc.stdout.readline().decode()
 
                             # If the caller wants everything in one go, or
                             # there is no callback function, then batch up
