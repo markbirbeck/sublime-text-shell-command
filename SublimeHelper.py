@@ -56,9 +56,9 @@ class TextCommand(sublime_plugin.TextCommand):
         '''Get the view's current working directory.'''
 
         view = self.view
+        folders = []
 
         if view is not None:
-
             # If there is a working directory defined in the data settings then use
             # it:
             #
@@ -68,7 +68,11 @@ class TextCommand(sublime_plugin.TextCommand):
                     data = settings.get(self.data_key + '_data', None)
                     if data is not None:
                         if 'working_dir' in data:
-                            return data['working_dir']
+                            folders.append(data['working_dir'])
+
+            settings = view.settings()
+            if settings.has('working_dir'):
+                folders.append(settings.get('working_dir'))
 
             window = view.window()
             if window is not None:
@@ -79,23 +83,27 @@ class TextCommand(sublime_plugin.TextCommand):
                 file_name = window.project_file_name()
                 if file_name is not None:
                     dirname, _ = os.path.split(os.path.abspath(file_name))
-                    return dirname
+                    folders.append(dirname)
 
                 # Alternatively, see if there are any open folders, and if so, use the
                 # path of the first one:
                 #
-                folders = window.folders()
-                if folders:
-                    return folders[0]
+                folders.extend(window.folders())
 
             # If there is a file in the active view then use it to work out
-            # a working directory:
+            # a working directory using "folders" as a priority list and 
+            # looking for a common ancestor to the current view's file:
             #
             file_name = view.file_name()
             if file_name is not None:
                 dirname, _ = os.path.split(os.path.abspath(file_name))
-                return dirname
-
+                folders.append(dirname)
+                for folder in folders:
+                    if os.path.commonprefix([folder, dirname]) == dirname:
+                        return dirname
+            # otherwise just return the first folder
+            if folders:
+                return folders[0]
         return None
 
 
