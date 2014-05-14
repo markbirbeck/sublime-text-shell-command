@@ -59,6 +59,11 @@ class TextCommand(sublime_plugin.TextCommand):
 
         if view is not None:
 
+            # This list will contain a set of directories that are candidates
+            # for the working directory:
+            #
+            folders = []
+
             # If there is a working directory defined in the data settings then use
             # it:
             #
@@ -68,7 +73,7 @@ class TextCommand(sublime_plugin.TextCommand):
                     data = settings.get(self.data_key + '_data', None)
                     if data is not None:
                         if 'working_dir' in data:
-                            return data['working_dir']
+                            folders.append(data['working_dir'])
 
             window = view.window()
             if window is not None:
@@ -79,14 +84,12 @@ class TextCommand(sublime_plugin.TextCommand):
                 file_name = window.project_file_name()
                 if file_name is not None:
                     dirname, _ = os.path.split(os.path.abspath(file_name))
-                    return dirname
+                    folders.append(dirname)
 
-                # Alternatively, see if there are any open folders, and if so, use the
-                # path of the first one:
+                # Now see if there are any open folders, and if so, add them
+                # to the list:
                 #
-                folders = window.folders()
-                if folders:
-                    return folders[0]
+                folders.extend(window.folders())
 
             # If there is a file in the active view then use it to work out
             # a working directory:
@@ -94,7 +97,22 @@ class TextCommand(sublime_plugin.TextCommand):
             file_name = view.file_name()
             if file_name is not None:
                 dirname, _ = os.path.split(os.path.abspath(file_name))
-                return dirname
+                folders.append(dirname)
+
+                # Now see if any of the directories in the priority list (in
+                # folders[]) is a common ancestor to the current view's file:
+                #
+                for folder in folders:
+                    commonprefix = os.path.commonprefix([folder, dirname])
+                    if commonprefix == dirname:
+                        return dirname
+
+            # If there is no view file, or it has no relationship to any of
+            # the directories in the priority list, then just return the first
+            # folder in the list (if there is one):
+            #
+            if folders:
+                return folders[0]
 
         return None
 
