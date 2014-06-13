@@ -34,7 +34,7 @@ In addition to this it's possible to customise the behaviour for many different 
 
 # Shell Configuration Files
 
-For detailed information about using your shell configuration options see [Using a Shell Configuration File](../wiki/Using-a-Shell-Configuration-File).
+For detailed information about using your shell configuration options see [Using a Shell Configuration File](../../wiki/Using-a-Shell-Configuration-File).
 
 # Commands
 
