@@ -34,7 +34,7 @@ In addition to this it's possible to customise the behaviour for many different 
 
 # Shell Configuration Files
 
-For detailed information about using your shell configuration options see [Using a Shell Configuration File](../wiki/Using-a-Shell-Configuration-File).
+For detailed information about using your shell configuration options see [Using a Shell Configuration File](../../wiki/Using-a-Shell-Configuration-File).
 
 # Commands
 
@@ -279,6 +279,15 @@ By default long-running commands will update the buffer as and when data is avai
 ```
 
 # Changelog
+
+2014-06-26 (v0.11.0)
+
+* Commands were failing on Windows due to an unnecessary check that `stdout` was ready. (@markbirbeck) Fixes issue #13. Thanks to @bergtholdt who drew attention to the problem and proposed a slightly different solution. 
+* Working directory selection is now much smarter, based on using the current file's path to find out which folder or project the file belongs to. (@bergtholdt) Fixes issue #17.
+* The working directory is set to be the 'root' deduced from the current file, but if the directory of the current file is required, the option `root_dir` can be set to `False`. (@markbirbeck) Fixes issue #24.
+* Menu entries that were supposed to provide access to settings and key bindings were opening the wrong files. (@markbirbeck) Fixes issue #22.
+* `CR/LF` sequences are now mapped to `LF` which improves display on Windows. (@markbirbeck) Fixes issue #21.
+* A link to a wiki page from the README was incorrect. (@mrjoelkemp) Fixes issue #19 and #20. Thanks also to @reqshark who spotted the same problem and also provided a solution.
 
 2014-03-20 (v0.10.0)
 

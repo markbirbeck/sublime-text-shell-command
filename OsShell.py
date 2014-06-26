@@ -97,23 +97,21 @@ def _process(commands, callback=None, stdin=None, settings=None, working_dir=Non
                 # If there's no error then see what we got from the command:
                 #
                 if return_code is None or return_code == 0:
-                    r, _, _ = select.select([proc.stdout], [], [])
-                    if r:
-                        # Process whatever output we can get:
-                        #
-                        output = True
-                        while output:
-                            output = proc.stdout.readline().decode()
+                    # Process whatever output we can get:
+                    #
+                    output = True
+                    while output:
+                        output = proc.stdout.readline().decode().replace('\r\n', '\n')
 
-                            # If the caller wants everything in one go, or
-                            # there is no callback function, then batch up
-                            # the output. Otherwise pass it back to the
-                            # caller as it becomes available:
-                            #
-                            if wait_for_completion is True or callback is None:
-                                results += output
-                            else:
-                                SH.main_thread(callback, output, **kwargs)
+                        # If the caller wants everything in one go, or
+                        # there is no callback function, then batch up
+                        # the output. Otherwise pass it back to the
+                        # caller as it becomes available:
+                        #
+                        if wait_for_completion is True or callback is None:
+                            results += output
+                        else:
+                            SH.main_thread(callback, output, **kwargs)
 
         except subprocess.CalledProcessError as e:
 
