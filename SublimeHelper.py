@@ -52,7 +52,7 @@ class TextCommand(sublime_plugin.TextCommand):
 
         return value
 
-    def get_working_dir(self, root_dir=True):
+    def get_working_dir(self, root_dir=False):
         '''Get the view's current working directory.'''
 
         view = self.view
