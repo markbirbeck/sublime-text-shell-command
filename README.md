@@ -280,6 +280,10 @@ By default long-running commands will update the buffer as and when data is avai
 
 # Changelog
 
+2014-06-26 (v0.11.1)
+
+* The working directory is set to be the directory of the current file, but if the 'root' (deduced from the current file) is required, the option `root_dir` can be set to `True`. (@markbirbeck) Fixes issue #25.
+
 2014-06-26 (v0.11.0)
 
 * Commands were failing on Windows due to an unnecessary check that `stdout` was ready. (@markbirbeck) Fixes issue #13. Thanks to @bergtholdt who drew attention to the problem and proposed a slightly different solution. 
