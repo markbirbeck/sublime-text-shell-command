@@ -16,7 +16,7 @@ class ShellCommandCommand(SH.TextCommand):
         self.data_key = 'ShellCommand'
         self.output_written = False
 
-    def run(self, edit, command=None, command_prefix=None, prompt=None, region=None, arg_required=None, stdin=None, panel=None, title=None, syntax=None, refresh=None, wait_for_completion=None, root_dir=True):
+    def run(self, edit, command=None, command_prefix=None, prompt=None, region=None, arg_required=None, stdin=None, panel=None, title=None, syntax=None, refresh=None, wait_for_completion=None, root_dir=False):
 
         # Map previous use of 'region' parameter:
         #
@@ -73,7 +73,7 @@ class ShellCommandCommand(SH.TextCommand):
         else:
             _C(command)
 
-    def run_shell_command(self, command=None, stdin=None, panel=False, title=None, syntax=None, refresh=False, console=None, working_dir=None, wait_for_completion=None, root_dir=True):
+    def run_shell_command(self, command=None, stdin=None, panel=False, title=None, syntax=None, refresh=False, console=None, working_dir=None, wait_for_completion=None, root_dir=False):
 
         view = self.view
         window = view.window()
