@@ -52,7 +52,7 @@ class TextCommand(sublime_plugin.TextCommand):
 
         return value
 
-    def get_working_dir(self):
+    def get_working_dir(self, root_dir=True):
         '''Get the view's current working directory.'''
 
         view = self.view
@@ -104,8 +104,12 @@ class TextCommand(sublime_plugin.TextCommand):
                 #
                 for folder in folders:
                     commonprefix = os.path.commonprefix([folder, dirname])
-                    if commonprefix == dirname:
-                        return dirname
+                    if root_dir is True:
+                        if commonprefix == folder:
+                            return folder
+                    else:
+                        if commonprefix == dirname:
+                            return dirname
 
             # If there is no view file, or it has no relationship to any of
             # the directories in the priority list, then just return the first
