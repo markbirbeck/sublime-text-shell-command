@@ -101,7 +101,7 @@ def _process(commands, callback=None, stdin=None, settings=None, working_dir=Non
                     #
                     output = True
                     while output:
-                        output = proc.stdout.readline().decode()
+                        output = proc.stdout.readline().decode().replace('\r\n', '\n')
 
                         # If the caller wants everything in one go, or
                         # there is no callback function, then batch up
