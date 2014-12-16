@@ -152,7 +152,7 @@ class SublimeHelperClearBufferCommand(sublime_plugin.TextCommand):
 
 class OutputTarget():
 
-    def __init__(self, window, data_key, command, working_dir, title=None, syntax=None, panel=False, console=None):
+    def __init__(self, window, data_key, command, working_dir, title=None, syntax=None, panel=False, console=None, shell=None):
 
         # If a panel has been requested then create one and show it,
         # otherwise create a new buffer, and set its caption:
@@ -189,7 +189,8 @@ class OutputTarget():
             #
             data = {
                 'command': command,
-                'working_dir': working_dir
+                'working_dir': working_dir,
+                'shell': shell
             }
             settings.set(data_key + '_data', data)
 

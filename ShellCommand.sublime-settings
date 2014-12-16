@@ -17,4 +17,22 @@
    */
 
 , "progress_display_heartbeat": 500
+
+  /**
+   * Command to invoke
+   * String stays for shell command, so default '$cmd' means just 'run command with shell'
+   * List stays for process name with args, for example 
+   * ['powershell', '-Command', '& { $cmd }'] will run powershell with specified arguments
+   * There are also $input metavar which is used when there are some input
+   * if '$input' present, input will be passed as argument instead of writing it to stdin
+   */
+
+, "shell": "$cmd"
+  /**
+   * Set syntax if command matches specified regex
+   * Example:
+   * { "^svn.*\bdiff\b": "Diff" }
+   * Will set 'Diff' syntax for commands like 'svn diff ...' or 'svn log -l 10 --diff'
+   */
+, "syntax_match": {}
 }
