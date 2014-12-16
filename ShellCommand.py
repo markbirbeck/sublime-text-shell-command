@@ -16,7 +16,7 @@ class ShellCommandCommand(SH.TextCommand):
         self.data_key = 'ShellCommand'
         self.output_written = False
 
-    def run(self, edit, command=None, command_prefix=None, prompt=None, region=None, arg_required=None, stdin=None, panel=None, title=None, syntax=None, refresh=None, wait_for_completion=None, root_dir=False):
+    def run(self, edit, command=None, command_prefix=None, prompt=None, region=None, arg_required=None, stdin=None, panel=None, title=None, syntax=None, refresh=None, wait_for_completion=None, root_dir=False, shell=None):
 
         # Map previous use of 'region' parameter:
         #
@@ -61,7 +61,7 @@ class ShellCommandCommand(SH.TextCommand):
             if arg is not None:
                 command = command + ' ' + arg
 
-            self.run_shell_command(command, stdin=stdin, panel=panel, title=title, syntax=syntax, refresh=refresh, wait_for_completion=wait_for_completion, root_dir=root_dir)
+            self.run_shell_command(command, stdin=stdin, panel=panel, title=title, syntax=syntax, refresh=refresh, wait_for_completion=wait_for_completion, root_dir=root_dir, shell=shell)
 
         # If no command is specified then we prompt for one, otherwise
         # we can just execute the command:
@@ -73,7 +73,7 @@ class ShellCommandCommand(SH.TextCommand):
         else:
             _C(command)
 
-    def run_shell_command(self, command=None, stdin=None, panel=False, title=None, syntax=None, refresh=False, console=None, working_dir=None, wait_for_completion=None, root_dir=False):
+    def run_shell_command(self, command=None, stdin=None, panel=False, title=None, syntax=None, refresh=False, console=None, working_dir=None, wait_for_completion=None, root_dir=False, shell=None):
 
         view = self.view
         window = view.window()
@@ -143,7 +143,8 @@ class ShellCommandCommand(SH.TextCommand):
                                                              title=title,
                                                              syntax=syntax,
                                                              panel=panel,
-                                                             console=console)
+                                                             console=console,
+                                                             shell=shell)
 
                         # Switch our progress bar to the new window:
                         #
@@ -159,7 +160,7 @@ class ShellCommandCommand(SH.TextCommand):
                     self.output_target.append_text(output)
                     self.output_written = True
 
-        OsShell.process(command, _C, stdin=stdin, settings=settings, working_dir=working_dir, wait_for_completion=wait_for_completion)
+        OsShell.process(command, _C, stdin=stdin, settings=settings, working_dir=working_dir, wait_for_completion=wait_for_completion, shell=shell)
 
 
 class ShellCommandOnRegionCommand(ShellCommandCommand):
@@ -186,5 +187,5 @@ class ShellCommandRefreshCommand(ShellCommandCommand):
                 console.run_command('sublime_helper_clear_buffer')
                 console.set_read_only(True)
 
-                self.run_shell_command(command=data['command'], console=console, working_dir=data['working_dir'])
+                self.run_shell_command(command=data['command'], console=console, working_dir=data['working_dir'], shell=data['shell'])
 
