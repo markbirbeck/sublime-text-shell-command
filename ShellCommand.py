@@ -1,4 +1,6 @@
 import sublime
+import os.path
+import shlex
 
 from . import SublimeHelper as SH
 from . import OsShell
@@ -82,6 +84,12 @@ class ShellCommandCommand(SH.TextCommand):
         if command is None:
             sublime.message_dialog('No command provided.')
             return
+
+        # replace '$path' with view file path, '$file' with view file name and '$dir' with view file dir
+        file_path = view.file_name()
+        if file_path:
+            (file_dir, file_name) = os.path.split(file_path)
+            command = command.replace('$path', shlex.quote(file_path)).replace('$file', shlex.quote(file_name)).replace('$dir', shlex.quote(file_dir))
 
         if working_dir is None:
             working_dir = self.get_working_dir(root_dir=root_dir)
