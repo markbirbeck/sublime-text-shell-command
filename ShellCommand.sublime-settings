@@ -28,4 +28,11 @@
    */
 
 , "shell": "$cmd"
+  /**
+   * Set syntax if command matches specified regex
+   * Example:
+   * { "^svn.*\bdiff\b": "Diff" }
+   * Will set 'Diff' syntax for commands like 'svn diff ...' or 'svn log -l 10 --diff'
+   */
+, "syntax_match": {}
 }

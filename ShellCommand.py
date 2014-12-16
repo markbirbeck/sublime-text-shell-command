@@ -1,6 +1,7 @@
 import sublime
 import os.path
 import shlex
+import re
 
 from . import SublimeHelper as SH
 from . import OsShell
@@ -93,6 +94,13 @@ class ShellCommandCommand(SH.TextCommand):
 
         if working_dir is None:
             working_dir = self.get_working_dir(root_dir=root_dir)
+
+        # Match syntax by settings regexes
+        if syntax is None:
+            syntax_match = settings.get('syntax_match')
+            for syntax_re, syntax_sy in syntax_match.items():
+                if re.match(syntax_re, command):
+                    syntax = syntax_sy
 
         # Run the command and write any output to the buffer:
         #
