@@ -9,7 +9,7 @@ import sublime
 from . import SublimeHelper as SH
 
 
-def process(commands, callback=None, stdin=None, settings=None, working_dir=None, wait_for_completion=None, **kwargs):
+def process(commands, callback=None, stdin=None, settings=None, working_dir=None, wait_for_completion=None, shell=None, **kwargs):
 
     # If there's no callback method then just return the output as
     # a string:
@@ -26,12 +26,13 @@ def process(commands, callback=None, stdin=None, settings=None, working_dir=None
             'stdin': stdin,
             'settings': settings,
             'working_dir': working_dir,
-            'wait_for_completion': wait_for_completion
+            'wait_for_completion': wait_for_completion,
+            'shell': shell
         })
         thread.start()
 
 
-def _process(commands, callback=None, stdin=None, settings=None, working_dir=None, wait_for_completion=None, **kwargs):
+def _process(commands, callback=None, stdin=None, settings=None, working_dir=None, wait_for_completion=None, shell=None, **kwargs):
     '''Process one or more OS commands.'''
 
     if wait_for_completion is None:
@@ -57,6 +58,23 @@ def _process(commands, callback=None, stdin=None, settings=None, working_dir=Non
         startupinfo = subprocess.STARTUPINFO()
         startupinfo.dwFlags |= subprocess.STARTF_USESHOWWINDOW
 
+    # If 'shell' is not set, get it from setrtings
+    if shell is None:
+        shell = settings.get('shell')
+
+    is_shell = isinstance(shell, str)
+
+    # Replace $input var
+    if not is_shell and '$input' in shell:
+        shell = list(filter(lambda sharg: sharg is not None, [stdin if sh == '$input' else sh for sh in shell]))
+        stdin = None
+
+    def decorate_shell_command(cmd):
+        if is_shell:
+            return shell.replace('$cmd', cmd)
+        else:
+            return [arg.replace('$cmd', cmd) for arg in shell]
+
     # Now we can execute each command:
     #
     for command in commands:
@@ -73,12 +91,11 @@ def _process(commands, callback=None, stdin=None, settings=None, working_dir=Non
             command = '. {} && {}'.format(bash_env, command)
 
         try:
-
-            proc = subprocess.Popen(command,
+            proc = subprocess.Popen(decorate_shell_command(command),
                                     stdin=subprocess.PIPE,
                                     stdout=subprocess.PIPE,
                                     stderr=subprocess.STDOUT,
-                                    shell=True,
+                                    shell=is_shell,
                                     cwd=working_dir,
                                     startupinfo=startupinfo)
 
