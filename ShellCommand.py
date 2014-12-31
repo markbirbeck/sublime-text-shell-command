@@ -170,7 +170,7 @@ class ShellCommandPromptCommand(ShellCommandCommand):
     User input invoked from left to right.
     '''
 
-    def run_shell_command(self, command=None, panel=False, title=None, syntax=None, refresh=False):
+    def run_shell_command(self, command=None, stdin=None, panel=False, title=None, syntax=None, refresh=False, console=None, working_dir=None, wait_for_completion=None, root_dir=False):
         if not command:
             return  # FIXME: command is empty, should return error message.
 
@@ -180,7 +180,7 @@ class ShellCommandPromptCommand(ShellCommandCommand):
             if len(asks) != len(argdict):
                 return  # NOTE: assertion code (Please remove after well tested)
             argstr = template.format(**argdict)
-            super(__class__, self).run_shell_command(argstr, panel, title, syntax, refresh)
+            super(__class__, self).run_shell_command(argstr, stdin, panel, title, syntax, refresh, console, working_dir, wait_for_completion, root_dir)
         if asks:
             self.ask_to_user(asks, _on_input_end)
         else:
