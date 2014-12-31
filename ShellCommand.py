@@ -71,7 +71,51 @@ class ShellCommandCommand(SH.TextCommand):
                 prompt = self.default_prompt
             self.view.window().show_input_panel(prompt, '', _C, None, None)
         else:
-            _C(command)
+            # A command can contain variables for substitution. The actual
+            # substitution takes place in the module VariableSubstitution,
+            # but if a value is not defined then this block prompts the user
+            # for a value:
+            #
+            from . import VariableSubstitution as VS
+
+            asks, template = VS.parse_command(command, self.view)
+            argdict = {}
+
+            def _on_input_end(argdict):
+                if len(asks) != len(argdict):
+                    return  # NOTE: assertion code (Please remove after well tested)
+                argstr = template.format(**argdict)
+
+                # Now we're finally ready to run the command:
+                #
+                _C(argstr)
+
+            def _ask_to_user(asks, callback):
+                askstack = asks[:]
+                arglist = []
+
+                def _on_done(arg):
+                    arglist.append(arg)
+                    if askstack:
+                        _run()
+                    else:
+                        # all variable input
+                        argdict = {x['variable']:y for x, y in zip(asks, arglist)}
+                        callback(argdict)
+
+                def _on_cancel():
+                    callback([])
+
+                def _run():
+                    ask = askstack.pop(0)
+                    self.view.window().show_input_panel(ask['message'],
+                        ask['default'], _on_done, None, _on_cancel)
+                _run()
+
+            if asks:
+                _ask_to_user(asks, _on_input_end)
+            else:
+                _on_input_end({})
 
     def run_shell_command(self, command=None, stdin=None, panel=False, title=None, syntax=None, refresh=False, console=None, working_dir=None, wait_for_completion=None, root_dir=False):
 

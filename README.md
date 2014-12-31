@@ -118,6 +118,22 @@ Often the output of a command is only required for a short amount of time, in wh
 
 To run a particular shell command use the `command` parameter.
 
+## Prompt the user for parameters
+
+```json
+[
+  {
+    "keys": ["ctrl+enter"],
+    "command": "shell_command",
+    "args": {
+      "command": "git checkout -b feature/${branch::Feature Branch} develop"
+    }
+  }
+]
+```
+
+The `branch` variable has a prompt, so the user is asked to provide its value.
+
 ## Use cursor selection for input
 
 ```json
