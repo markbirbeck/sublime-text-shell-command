@@ -237,6 +237,7 @@ class ShellCommandPromptCommand(ShellCommandCommand):
                 # defined variable not found. Start prompting.
                 if len(chs) == 1:
                     prompt_message = variable_name + ':'
+                    default_value = ''
                 else:
                     prompt_message = chs[1]
                     default_value = chs[2] if len(chs) > 2 else ''
