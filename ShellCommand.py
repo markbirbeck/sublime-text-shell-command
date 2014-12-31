@@ -171,10 +171,12 @@ class ShellCommandPromptCommand(ShellCommandCommand):
     '''
 
     def run_shell_command(self, command=None, stdin=None, panel=False, title=None, syntax=None, refresh=False, console=None, working_dir=None, wait_for_completion=None, root_dir=False):
+        from . import VariableSubstitution as VS
+
         if not command:
             return  # FIXME: command is empty, should return error message.
 
-        asks, template = self.parse_command(command)
+        asks, template = VS.parse_command(command, self.view)
         argdict = {}
         def _on_input_end(argdict):
             if len(asks) != len(argdict):
@@ -206,55 +208,6 @@ class ShellCommandPromptCommand(ShellCommandCommand):
             ask = askstack.pop(0)
             self.view.window().show_input_panel(ask['message'], ask['default'], _on_done, None, _on_cancel)
         _run()
-
-    def parse_command(self, command):
-        ''' Inspired by Sublime's snippet syntax; "${...}" is a variable.
-        But it's slightly different, ${<variable_name>:<Prompt message if not exist>[:default value]}
-        EX) git branch -m ${current_branch} ${new_branch:Enter branch name}
-        '''
-        import re
-
-        parsed = re.split(r'\${(.*?)}', command)
-        # if not variables, return command itself
-        if len(parsed) == 1:
-            return [], command
-        template_parts = []
-        asks = []
-        for idx, item in enumerate(parsed, start=1):
-            # variable
-            auto_variable = 0
-            if idx % 2 == 0:
-                chs = item.split(':')
-                variable_name = chs[0]
-                if not variable_name:
-                    variable_name = '_' + str(auto_variable)
-                    auto_variable += 1
-                v = self.find_defined_value(variable_name)
-                if v:
-                    template_parts.append(v)
-                    continue
-                # defined variable not found. Start prompting.
-                if len(chs) == 1:
-                    prompt_message = variable_name + ':'
-                    default_value = ''
-                else:
-                    prompt_message = chs[1]
-                    default_value = chs[2] if len(chs) > 2 else ''
-                asks.append(dict(variable=variable_name, message=prompt_message, default=default_value))
-                template_parts.append('{%s}' % variable_name)
-            else:
-                template_parts.append(item)
-        return asks, ''.join(template_parts)
-
-    def find_defined_value(self, item):
-        window = self.view.window()
-        if item == 'project_folders':
-            return ' '.join(window.folders() or [])
-        elif item == 'project_name':
-            project_path = window.project_file_name()
-            if not project_path:
-                return ''
-            return os.path.basename(project_path).replace('.sublime-project', '')
 
 class ShellCommandOnRegionCommand(ShellCommandCommand):
 
