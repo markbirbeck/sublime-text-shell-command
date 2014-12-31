@@ -184,8 +184,7 @@ class ShellCommandPromptCommand(ShellCommandCommand):
         if asks:
             self.ask_to_user(asks, _on_input_end)
         else:
-            self.run_shell_command(template, out_to=out_to, title=title, syntax=syntax,
-                                   refresh=refresh, output_filter=output_filter)
+            _on_input_end({})
 
     def ask_to_user(self, asks, callback):
         askstack = asks[:]
