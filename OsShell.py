@@ -85,6 +85,7 @@ def _process(commands, callback=None, stdin=None, settings=None, working_dir=Non
             if stdin is not None:
                 proc.stdin.write(stdin.encode('utf-8'))
                 proc.stdin.close();
+
             # We're going to keep polling the command and either:
             #
             #   1. we get None to tell us that the command is still running, or;
