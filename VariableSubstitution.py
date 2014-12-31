@@ -1,7 +1,7 @@
 def parse_command(command, view):
     ''' Inspired by Sublime's snippet syntax; "${...}" is a variable.
-    But it's slightly different, ${<variable_name>:<Prompt message if not exist>[:default value]}
-    EX) git branch -m ${current_branch} ${new_branch:Enter branch name}
+    But it's slightly different, ${<variable_name>[:[default value][:<Prompt message if not exist>]]}
+    EX) git branch -m ${current_branch} ${new_branch::Enter branch name}
     '''
     import re
 
@@ -24,13 +24,22 @@ def parse_command(command, view):
             if v:
                 template_parts.append(v)
                 continue
-            # defined variable not found. Start prompting.
-            if len(chs) == 1:
-                prompt_message = variable_name + ':'
+
+            # If the defined variable is not found then either use the default
+            # value...
+            #
+            if len(chs) == 2:
+                template_parts.append(chs[1])
+                continue
+
+            # ...or start prompting:
+            #
+            if len(chs) < 3:
+                prompt_message = variable_name
                 default_value = ''
             else:
-                prompt_message = chs[1]
-                default_value = chs[2] if len(chs) > 2 else ''
+                prompt_message = chs[2]
+                default_value = chs[1]
             asks.append(dict(variable=variable_name, message=prompt_message, default=default_value))
             template_parts.append('{%s}' % variable_name)
         else:
