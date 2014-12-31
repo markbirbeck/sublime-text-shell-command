@@ -213,6 +213,8 @@ class ShellCommandPromptCommand(ShellCommandCommand):
         But it's slightly different, ${<variable_name>:<Prompt message if not exist>[:default value]}
         EX) git branch -m ${current_branch} ${new_branch:Enter branch name}
         '''
+        import re
+
         parsed = re.split(r'\${(.*?)}', command)
         # if not variables, return command itself
         if len(parsed) == 1:
