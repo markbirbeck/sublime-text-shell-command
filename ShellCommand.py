@@ -53,15 +53,21 @@ class ShellCommandCommand(SH.TextCommand):
 
         # Setup a closure to run the command:
         #
-        def _C(command):
+        def _C(commands):
 
-            if command_prefix is not None:
-                command = command_prefix + ' ' + command
+            if not isinstance(commands, list):
+                commands = [commands]
 
-            if arg is not None:
-                command = command + ' ' + arg
+            for idx, command in enumerate(commands):
+                if command_prefix is not None:
+                    command = command_prefix + ' ' + command
 
-            self.run_shell_command(command, stdin=stdin, panel=panel, title=title, syntax=syntax, refresh=refresh, wait_for_completion=wait_for_completion, root_dir=root_dir)
+                if arg is not None:
+                    command = command + ' ' + arg
+
+                commands[idx] = command
+
+            self.run_shell_command(commands, stdin=stdin, panel=panel, title=title, syntax=syntax, refresh=refresh, wait_for_completion=wait_for_completion, root_dir=root_dir)
 
         # If no command is specified then we prompt for one, otherwise
         # we can just execute the command:
@@ -78,13 +84,19 @@ class ShellCommandCommand(SH.TextCommand):
             #
             from . import VariableSubstitution as VS
 
-            asks, template = VS.parse_command(command, self.view)
+            asks, templates = VS.parse_command(command, self.view)
             argdict = {}
 
             def _on_input_end(argdict):
                 if len(asks) != len(argdict):
                     return  # NOTE: assertion code (Please remove after well tested)
-                argstr = template.format(**argdict)
+                argstr = []
+                for template in templates:
+                    if len(argdict):
+                        command = template.format(**argdict)
+                    else:
+                        command = template
+                    argstr.append(command)
 
                 # Now we're finally ready to run the command:
                 #

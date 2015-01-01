@@ -1,0 +1,3 @@
+Version 0.12.1 Release Notes
+
+In addition to defining variables to obtain user input there are now variables available that mirror those used in the ST build system. See [Build System Variables](http://docs.sublimetext.info/en/latest/reference/build_systems.html#build-system-variables) for the full list and description.
