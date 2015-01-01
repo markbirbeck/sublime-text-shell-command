@@ -309,6 +309,10 @@ By default long-running commands will update the buffer as and when data is avai
 
 # Changelog
 
+2015-01-01 (v0.12.0)
+
+* Commands can now get parameters from users. Thanks to @aflc for providing the code for this functionality. Fixes issue #36.
+
 2014-06-26 (v0.11.1)
 
 * The working directory is set to be the directory of the current file, but if the 'root' (deduced from the current file) is required, the option `root_dir` can be set to `True`. (@markbirbeck) Fixes issue #25.
