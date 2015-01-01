@@ -309,6 +309,10 @@ By default long-running commands will update the buffer as and when data is avai
 
 # Changelog
 
+2015-01-01 (v0.12.1)
+
+* Add substitution variables that mirror those used in the ST build system. See [Build System Variables](http://docs.sublimetext.info/en/latest/reference/build_systems.html#build-system-variables) for the full list and description. Fixes issue #35.
+
 2015-01-01 (v0.12.0)
 
 * Commands can now get parameters from users. Thanks to @aflc for providing the code for this functionality. Fixes issue #36.
