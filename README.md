@@ -118,6 +118,35 @@ Often the output of a command is only required for a short amount of time, in wh
 
 To run a particular shell command use the `command` parameter.
 
+## Prompt the user for parameters
+
+```json
+[
+  {
+    "keys": ["ctrl+enter"],
+    "command": "shell_command",
+    "args": {
+      "command": "git checkout -b feature/${branch::Feature Branch} develop"
+    }
+  }
+]
+```
+
+The `branch` variable has a prompt (the string 'Feature Branch'), so the user is asked to provide its value.
+
+If a default value is provided (the second value after the variable name) then this will be placed into the prompt:
+```json
+[
+  {
+    "keys": ["ctrl+enter"],
+    "command": "shell_command",
+    "args": {
+      "command": "git checkout -b feature/${branch:new feature:Feature Branch} develop"
+    }
+  }
+]
+```
+
 ## Use cursor selection for input
 
 ```json
@@ -279,6 +308,10 @@ By default long-running commands will update the buffer as and when data is avai
 ```
 
 # Changelog
+
+2015-01-01 (v0.12.0)
+
+* Commands can now get parameters from users. Thanks to @aflc for providing the code for this functionality. Fixes issue #36.
 
 2014-06-26 (v0.11.1)
 
