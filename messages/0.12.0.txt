@@ -1,0 +1,3 @@
+Version 0.12.0 Release Notes
+
+Commands can now obtain parameters from users.
