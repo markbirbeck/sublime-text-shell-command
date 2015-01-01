@@ -132,7 +132,20 @@ To run a particular shell command use the `command` parameter.
 ]
 ```
 
-The `branch` variable has a prompt, so the user is asked to provide its value.
+The `branch` variable has a prompt (the string 'Feature Branch'), so the user is asked to provide its value.
+
+If a default value is provided (the second value after the variable name) then this will be placed into the prompt:
+```json
+[
+  {
+    "keys": ["ctrl+enter"],
+    "command": "shell_command",
+    "args": {
+      "command": "git checkout -b feature/${branch:new feature:Feature Branch} develop"
+    }
+  }
+]
+```
 
 ## Use cursor selection for input
 
