@@ -1,9 +1,56 @@
+def file_name_split(file):
+    import os
+
+    if file is None:
+        file = ''
+
+    # The directory of the current file, e.g., C:\Files:
+    #
+    path = os.path.dirname(file)
+
+    # The name portion of the current file, e.g., Chapter1.txt:
+    #
+    name = os.path.basename(file)
+
+    # The extension portion of the current file, e.g., txt:
+    #
+    tmp, ext = os.path.splitext(file)
+
+    # The name-only portion of the current file, e.g., Document:
+    #
+    base_name = os.path.basename(tmp)
+
+    return file, path, name, ext, base_name
+
+def create_variable_values(view):
+    import os
+    import sublime
+
+    window = view.window()
+    vars = {}
+
+    # Build system variables:
+    #
+    # See http://docs.sublimetext.info/en/latest/reference/build_systems.html#build-system-variables
+    #
+    vars['file'], vars['file_path'], vars['file_name'], vars['file_extension'], vars['file_base_name'] = file_name_split(view.file_name())
+    vars['packages'] = sublime.packages_path()
+    vars['project'], vars['project_path'], vars['project_name'], vars['project_extension'], vars['project_base_name'] = file_name_split(window.project_file_name())
+
+    # Others:
+    #
+    vars['project_folders'] = ' '.join(window.folders() or [])
+
+    return vars
+
 def parse_command(command, view):
     ''' Inspired by Sublime's snippet syntax; "${...}" is a variable.
     But it's slightly different, ${<variable_name>[:[default value][:<Prompt message if not exist>]]}
     EX) git branch -m ${current_branch} ${new_branch::Enter branch name}
     '''
     import re
+
+    vars = create_variable_values(view)
 
     parsed = re.split(r'\${(.*?)}', command)
     # if not variables, return command itself
@@ -20,7 +67,7 @@ def parse_command(command, view):
             if not variable_name:
                 variable_name = '_' + str(auto_variable)
                 auto_variable += 1
-            v = find_defined_value(variable_name, view)
+            v = find_defined_value(variable_name, vars)
             if v:
                 template_parts.append(v)
                 continue
@@ -46,13 +93,6 @@ def parse_command(command, view):
             template_parts.append(item)
     return asks, ''.join(template_parts)
 
-def find_defined_value(item, view):
-    window = view.window()
-
-    if item == 'project_folders':
-        return ' '.join(window.folders() or [])
-    elif item == 'project_name':
-        project_path = window.project_file_name()
-        if not project_path:
-            return ''
-        return os.path.basename(project_path).replace('.sublime-project', '')
+def find_defined_value(item, vars):
+    if item in vars:
+        return vars[item]
