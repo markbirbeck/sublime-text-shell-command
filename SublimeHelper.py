@@ -165,7 +165,7 @@ class OutputTarget():
                 window.run_command('show_panel', {'panel': 'output.ShellCommand'})
             else:
                 self.console = window.new_file()
-                caption = title if title else '*Shell Command Output*'
+                caption = title if title else '*ShellCommand Output*'
                 self.console.set_name(caption)
 
             # Indicate that this buffer is a scratch buffer:

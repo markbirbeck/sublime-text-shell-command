@@ -10,7 +10,7 @@ class ShellCommandCommand(SH.TextCommand):
 
         SH.TextCommand.__init__(self, plugin, **kwargs)
         if default_prompt is None:
-            self.default_prompt = 'Shell Command'
+            self.default_prompt = 'ShellCommand'
         else:
             self.default_prompt = default_prompt
         self.data_key = 'ShellCommand'
