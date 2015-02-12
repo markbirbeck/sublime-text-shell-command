@@ -312,6 +312,12 @@ By default long-running commands will update the buffer as and when data is avai
 
 # Changelog
 
+2015-02-12 (v0.12.2)
+
+* Add blank line before list in README. (@kleinfreund) Fixes issue #41.
+* Provide method for running shell commands directly. (@markbirbeck) Fixes issue #42.
+* Add reference to [Git Mode](https://github.com/markbirbeck/sublime-text-gitmode/) as an example of using `Shell Command` to create modes. (@markbirbeck)
+
 2015-01-01 (v0.12.1)
 
 * Add substitution variables that mirror those used in the ST build system. See [Build System Variables](http://docs.sublimetext.info/en/latest/reference/build_systems.html#build-system-variables) for the full list and description. Fixes issue #35.
