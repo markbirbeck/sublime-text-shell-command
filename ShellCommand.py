@@ -139,9 +139,6 @@ class ShellCommandCommand(SH.TextCommand):
             sublime.message_dialog('No command provided.')
             return
 
-        if working_dir is None:
-            working_dir = self.get_working_dir(root_dir=root_dir)
-
         # Run the command and write any output to the buffer:
         #
         message = self.default_prompt + ': (' + ''.join(command)[:20] + ')'
@@ -215,8 +212,14 @@ class ShellCommandCommand(SH.TextCommand):
                     self.output_target.append_text(output)
                     self.output_written = True
 
-        OsShell.process(command, _C, stdin=stdin, settings=settings, working_dir=working_dir, wait_for_completion=wait_for_completion)
+        return self.run_shell_command_raw(command, _C, stdin=stdin, settings=settings, working_dir=working_dir, wait_for_completion=wait_for_completion)
 
+    def run_shell_command_raw(self, *args, **kwargs):
+
+        if not 'working_dir' in kwargs:
+            kwargs['working_dir'] = self.get_working_dir(root_dir=kwargs.get('root_dir'))
+
+        return OsShell.process(*args, **kwargs)
 
 class ShellCommandOnRegionCommand(ShellCommandCommand):
 
