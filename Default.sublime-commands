@@ -1,6 +1,6 @@
 [
   {
-    "caption": "Shell Command",
+    "caption": "ShellCommand",
     "command": "shell_command_on_region"
   }
 ]

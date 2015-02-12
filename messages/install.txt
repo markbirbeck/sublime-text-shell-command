@@ -1,1 +1,1 @@
-Thanks for installing the Shell Command plugin for Sublime Text.
+Thanks for installing the ShellCommand plugin for Sublime Text.

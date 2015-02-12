@@ -1,0 +1,3 @@
+Version 0.13.0 Release Notes
+
+The module has been renamed to `ShellCommand` in the package manager so this release simply applies the name change to documents, prompts, and file paths.

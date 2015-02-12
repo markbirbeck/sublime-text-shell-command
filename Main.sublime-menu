@@ -10,11 +10,11 @@
         "id": "package-settings",
         "children": [
           {
-            "caption": "Shell Command",
+            "caption": "ShellCommand",
             "children": [
               {
                 "command": "open_file",
-                "args": {"file": "${packages}/Shell Command/ShellCommand.sublime-settings"},
+                "args": {"file": "${packages}/ShellCommand/ShellCommand.sublime-settings"},
                 "caption": "Settings – Default"
               },
               {
@@ -25,7 +25,7 @@
               { "caption": "-" },
               {
                 "command": "open_file",
-                "args": {"file": "${packages}/Shell Command/Default.sublime-keymap"},
+                "args": {"file": "${packages}/ShellCommand/Default.sublime-keymap"},
                 "caption": "Key Bindings – Default"
               },
               { "caption": "-" },
