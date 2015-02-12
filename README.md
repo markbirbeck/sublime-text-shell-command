@@ -3,10 +3,13 @@
 The `ShellCommand` plugin allows arbitrary shell commands to be run and their output to be sent to buffers or panels.
 
 It can:
+
 * run pretty much any shell command, either typed into a prompt or configured in key bindings and commands;
 * the output from a command is directable to either a new buffer or a panel;
 * subsequent commands can cause other panels to re-run their commands, i.e., to 'refresh' themselves;
 * the output of a shell command can be controlled by any syntax definition.
+
+These features can be combined together to create apps or *modes*. To see a full example of how this can be done, see the [Git Mode](https://packagecontrol.io/packages/Git%20Mode) plugin, which provides an interface to Git, entirely implemented using key bindings, syntax definitions and calls to Shell Command.
 
 # Motivation
 
@@ -308,6 +311,12 @@ By default long-running commands will update the buffer as and when data is avai
 ```
 
 # Changelog
+
+2015-02-12 (v0.12.2)
+
+* Add blank line before list in README. (@kleinfreund) Fixes issue #41.
+* Provide method for running shell commands directly. (@markbirbeck) Fixes issue #42.
+* Add reference to [Git Mode](https://github.com/markbirbeck/sublime-text-gitmode/) as an example of using `Shell Command` to create modes. (@markbirbeck)
 
 2015-01-01 (v0.12.1)
 
