@@ -312,6 +312,10 @@ By default long-running commands will update the buffer as and when data is avai
 
 # Changelog
 
+2015-02-12 (v0.13.0)
+
+The module has been renamed to `ShellCommand` in the package manager so this release simply applies the name change to documents, prompts, and file paths.
+
 2015-02-12 (v0.12.2)
 
 * Add blank line before list in README. (@kleinfreund) Fixes issue #41.
