@@ -3,6 +3,7 @@
 The `ShellCommand` plugin allows arbitrary shell commands to be run and their output to be sent to buffers or panels.
 
 It can:
+
 * run pretty much any shell command, either typed into a prompt or configured in key bindings and commands;
 * the output from a command is directable to either a new buffer or a panel;
 * subsequent commands can cause other panels to re-run their commands, i.e., to 'refresh' themselves;
