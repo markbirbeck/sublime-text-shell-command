@@ -2,6 +2,6 @@ Version 0.12.2 Release Notes
 
 It's now possible to run shell commands directly with the run_shell_command_raw() method.
 
-This won't affect user functionality, but does make it easier when building modes on top of Shell Command, such as Git Mode:
+This won't affect user functionality, but does make it easier when building modes on top of ShellCommand, such as GitMode:
 
   <https://github.com/markbirbeck/sublime-text-gitmode/>

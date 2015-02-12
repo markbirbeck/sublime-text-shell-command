@@ -9,7 +9,7 @@ It can:
 * subsequent commands can cause other panels to re-run their commands, i.e., to 'refresh' themselves;
 * the output of a shell command can be controlled by any syntax definition.
 
-These features can be combined together to create apps or *modes*. To see a full example of how this can be done, see the [Git Mode](https://packagecontrol.io/packages/Git%20Mode) plugin, which provides an interface to Git, entirely implemented using key bindings, syntax definitions and calls to Shell Command.
+These features can be combined together to create apps or *modes*. To see a full example of how this can be done, see the [Git Mode](https://packagecontrol.io/packages/Git%20Mode) plugin, which provides an interface to Git, entirely implemented using key bindings, syntax definitions and calls to ShellCommand.
 
 # Motivation
 
@@ -41,7 +41,7 @@ For detailed information about using your shell configuration options see [Using
 
 # Commands
 
-There is one command provided in the Command Pallette, which is `Shell Command`. This provides a prompt into which a shell command can be entered. Any selections in the active view will be fed to the command as standard input. If there are no selections then the entire buffer will be passed through.
+There is one command provided in the Command Pallette, which is `ShellCommand`. This provides a prompt into which a shell command can be entered. Any selections in the active view will be fed to the command as standard input. If there are no selections then the entire buffer will be passed through.
 
 # Configuration Settings
 
@@ -316,7 +316,7 @@ By default long-running commands will update the buffer as and when data is avai
 
 * Add blank line before list in README. (@kleinfreund) Fixes issue #41.
 * Provide method for running shell commands directly. (@markbirbeck) Fixes issue #42.
-* Add reference to [Git Mode](https://github.com/markbirbeck/sublime-text-gitmode/) as an example of using `Shell Command` to create modes. (@markbirbeck)
+* Add reference to [Git Mode](https://github.com/markbirbeck/sublime-text-gitmode/) as an example of using `ShellCommand` to create modes. (@markbirbeck)
 
 2015-01-01 (v0.12.1)
 
