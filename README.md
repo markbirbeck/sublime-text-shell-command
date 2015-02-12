@@ -9,7 +9,7 @@ It can:
 * subsequent commands can cause other panels to re-run their commands, i.e., to 'refresh' themselves;
 * the output of a shell command can be controlled by any syntax definition.
 
-These features can be combined together to create apps or *modes*. To see a full example of how this can be done, see the [Git Mode](https://packagecontrol.io/packages/Git%20Mode) plugin, which provides an interface to Git, entirely implemented using key bindings, syntax definitions and calls to ShellCommand.
+These features can be combined together to create apps or *modes*. To see a full example of how this can be done, see the [Git Mode](https://packagecontrol.io/packages/Git%20Mode) plugin, which provides an interface to Git, entirely implemented using key bindings, syntax definitions and calls to `ShellCommand`.
 
 # Motivation
 
