@@ -1,0 +1,3 @@
+Version 0.13.1 Release Notes
+
+Added comint-scroll-show-maximum-output configuration option which forces a buffer to always show the most recent output, by scrolling it into view.
