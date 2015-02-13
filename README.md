@@ -45,6 +45,12 @@ There is one command provided in the Command Pallette, which is `ShellCommand`. 
 
 # Configuration Settings
 
+NOTE: Some variable names have hyphens and some underscores. This is because I'm still uncertain about how much to align with the Emacs functionality that this module is based on.
+
+## comint-scroll-show-maximum-output
+
+If comint-scroll-show-maximum-output is `True`, then scrolling due to arrival of output tries to place the last line of text at the bottom line of the window, so as to show as much useful text as possible. (This mimics the scrolling behavior of many terminals.) The default is `False`.
+
 ## show_success_but_no_output_message
 
 Indicates whether to show a message when the shell command returns no output, or the output is just whitespace. The default value is `False`, i.e., no window is created if the command doesn't return anything.
@@ -311,6 +317,10 @@ By default long-running commands will update the buffer as and when data is avai
 ```
 
 # Changelog
+
+2015-02-13 (v0.13.1)
+
+Added option to allow the end of a view to always be visible. Closes issue #39.
 
 2015-02-12 (v0.13.0)
 
