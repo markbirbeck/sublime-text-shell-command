@@ -12,6 +12,16 @@
 , "comint-scroll-show-maximum-output": false
 
   /**
+   * shell-file-name provides the name of the shell to use when
+   * executing commands. If this value is not set then the SHELL
+   * environment variable is used on Posix systems, or COMSPEC on
+   * Windows. If none of these is set then the behaviour is defined
+   * by subprocess.Popen():
+   */
+
+//, "shell-file-name": "bash"
+
+  /**
    * The default behaviour in Emacs when there is no output from a successful
    * shell command, is to show a message in the buffer. We'll make that
    * configurable because we don't always want some output:
