@@ -318,6 +318,10 @@ By default long-running commands will update the buffer as and when data is avai
 
 # Changelog
 
+2015-02-13 (v0.13.1)
+
+Added option to allow the end of a view to always be visible. Closes issue #39.
+
 2015-02-12 (v0.13.0)
 
 The module has been renamed to `ShellCommand` in the package manager so this release simply applies the name change to documents, prompts, and file paths.
