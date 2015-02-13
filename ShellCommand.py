@@ -154,6 +154,11 @@ class ShellCommandCommand(SH.TextCommand):
           settings.get('progress_display_heartbeat'))
         self.progress.start()
 
+        # Grab the config setting that determines whether to scroll the end of the view
+        # so that it's visible:
+        #
+        scroll_show_maximum_output = settings.get('comint-scroll-show-maximum-output')
+
         def _C(output):
 
             # If output is None then the command has finished:
@@ -209,7 +214,7 @@ class ShellCommandCommand(SH.TextCommand):
                     # Append our output to whatever buffer is being used, and
                     # track that some output has now been written:
                     #
-                    self.output_target.append_text(output)
+                    self.output_target.append_text(output, scroll_show_maximum_output=scroll_show_maximum_output)
                     self.output_written = True
 
         return self.run_shell_command_raw(command, _C, stdin=stdin, settings=settings, working_dir=working_dir, wait_for_completion=wait_for_completion)

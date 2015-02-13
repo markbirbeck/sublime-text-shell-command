@@ -193,14 +193,17 @@ class OutputTarget():
             }
             settings.set(data_key + '_data', data)
 
-    def append_text(self, output):
+    def append_text(self, output, scroll_show_maximum_output=False):
 
         console = self.console
 
-        # Insert the output into the buffer:
+        # Insert the output into the buffer. If the flag is set to show maximum output
+        # then we make the end of the buffer visible:
         #
         console.set_read_only(False)
         console.run_command('sublime_helper_insert_text', {'pos': console.size(), 'msg': output})
+        if scroll_show_maximum_output:
+            console.run_command('move_to', {'to': 'eof', 'extend': False})
         console.set_read_only(True)
 
     def set_status(self, tag, message):

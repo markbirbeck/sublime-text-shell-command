@@ -1,5 +1,15 @@
 {
-  "version": "0.13.0"
+  "version": "0.13.1"
+
+  /**
+   * From Emacs: If comint-scroll-show-maximum-output is true, then
+   * scrolling due to arrival of output tries to place the last line
+   * of text at the bottom line of the window, so as to show as much
+   * useful text as possible. (This mimics the scrolling behavior of
+   * many terminals.) The default is false:
+   */
+
+, "comint-scroll-show-maximum-output": false
 
   /**
    * The default behaviour in Emacs when there is no output from a successful

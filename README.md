@@ -9,7 +9,7 @@ It can:
 * subsequent commands can cause other panels to re-run their commands, i.e., to 'refresh' themselves;
 * the output of a shell command can be controlled by any syntax definition.
 
-These features can be combined together to create apps or *modes*. To see a full example of how this can be done, see the [Git Mode](https://packagecontrol.io/packages/Git%20Mode) plugin, which provides an interface to Git, entirely implemented using key bindings, syntax definitions and calls to ShellCommand.
+These features can be combined together to create apps or *modes*. To see a full example of how this can be done, see the [Git Mode](https://packagecontrol.io/packages/Git%20Mode) plugin, which provides an interface to Git, entirely implemented using key bindings, syntax definitions and calls to `ShellCommand`.
 
 # Motivation
 
@@ -44,6 +44,12 @@ For detailed information about using your shell configuration options see [Using
 There is one command provided in the Command Pallette, which is `ShellCommand`. This provides a prompt into which a shell command can be entered. Any selections in the active view will be fed to the command as standard input. If there are no selections then the entire buffer will be passed through.
 
 # Configuration Settings
+
+NOTE: Some variable names have hyphens and some underscores. This is because I'm still uncertain about how much to align with the Emacs functionality that this module is based on.
+
+## comint-scroll-show-maximum-output
+
+If comint-scroll-show-maximum-output is `True`, then scrolling due to arrival of output tries to place the last line of text at the bottom line of the window, so as to show as much useful text as possible. (This mimics the scrolling behavior of many terminals.) The default is `False`.
 
 ## show_success_but_no_output_message
 
@@ -311,6 +317,10 @@ By default long-running commands will update the buffer as and when data is avai
 ```
 
 # Changelog
+
+2015-02-13 (v0.13.1)
+
+Added option to allow the end of a view to always be visible. Closes issue #39.
 
 2015-02-12 (v0.13.0)
 
