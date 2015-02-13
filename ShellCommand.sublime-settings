@@ -1,5 +1,5 @@
 {
-  "version": "0.13.1"
+  "version": "0.14.0"
 
   /**
    * From Emacs: If comint-scroll-show-maximum-output is true, then
@@ -10,6 +10,16 @@
    */
 
 , "comint-scroll-show-maximum-output": false
+
+  /**
+   * shell-file-name provides the name of the shell to use when
+   * executing commands. If this value is not set then the SHELL
+   * environment variable is used on Posix systems, or COMSPEC on
+   * Windows. If none of these is set then the behaviour is defined
+   * by subprocess.Popen():
+   */
+
+//, "shell-file-name": "bash"
 
   /**
    * The default behaviour in Emacs when there is no output from a successful

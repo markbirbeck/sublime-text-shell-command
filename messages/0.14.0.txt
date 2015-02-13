@@ -1,0 +1,3 @@
+Version 0.14.0 Release Notes
+
+Added shell-file-name which provides the name of the shell to use when executing commands. If this value is not set then either the SHELL or COMSPEC environment variable is used, depending on whether Sublime Text is running on a Posix or Windows system. If none of these is set then the behaviour is defined by subprocess.Popen().

@@ -72,9 +72,22 @@ def _process(commands, callback=None, stdin=None, settings=None, working_dir=Non
         if bash_env is not None:
             command = '. {} && {}'.format(bash_env, command)
 
+        # Work out whether the executable is being overridden in the
+        # configuration settings or an environment variable:
+        #
+        # NOTE: We don't need to check COMSPEC on Windows since this
+        # is already done inside Popen().
+        #
+        executable = None
+        if settings is not None and settings.has('shell-file-name'):
+            executable = settings.get('shell-file-name')
+        else:
+            executable = os.getenv('SHELL')
+
         try:
 
             proc = subprocess.Popen(command,
+                                    executable=executable,
                                     stdin=subprocess.PIPE,
                                     stdout=subprocess.PIPE,
                                     stderr=subprocess.STDOUT,
