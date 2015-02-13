@@ -51,6 +51,10 @@ NOTE: Some variable names have hyphens and some underscores. This is because I'm
 
 If comint-scroll-show-maximum-output is `True`, then scrolling due to arrival of output tries to place the last line of text at the bottom line of the window, so as to show as much useful text as possible. (This mimics the scrolling behavior of many terminals.) The default is `False`.
 
+## shell-file-name
+
+`shell-file-name` provides the name of the shell to use when executing commands. If this value is not set then either the `SHELL` or `COMSPEC` environment variable is used, depending on whether Sublime Text is running on a Posix or Windows system. If none of these is set then the behaviour is defined by `subprocess.Popen()`.
+
 ## show_success_but_no_output_message
 
 Indicates whether to show a message when the shell command returns no output, or the output is just whitespace. The default value is `False`, i.e., no window is created if the command doesn't return anything.
@@ -317,6 +321,10 @@ By default long-running commands will update the buffer as and when data is avai
 ```
 
 # Changelog
+
+2015-02-13 (v0.14.0)
+
+Added option to allow the shell used to be overridden. Closes issue #32.
 
 2015-02-13 (v0.13.1)
 
