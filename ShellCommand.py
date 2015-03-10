@@ -223,7 +223,7 @@ class ShellCommandCommand(SH.TextCommand):
 
     def run_shell_command_raw(self, *args, **kwargs):
 
-        if not 'working_dir' in kwargs or kwargs.get('root_dir'):
+        if kwargs['working_dir'] is None:
             kwargs['working_dir'] = self.get_working_dir(root_dir=kwargs.get('root_dir'))
 
         return OsShell.process(*args, **kwargs)
