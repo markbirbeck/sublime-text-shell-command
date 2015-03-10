@@ -217,11 +217,11 @@ class ShellCommandCommand(SH.TextCommand):
                     self.output_target.append_text(output, scroll_show_maximum_output=scroll_show_maximum_output)
                     self.output_written = True
 
-        return self.run_shell_command_raw(command, _C, stdin=stdin, settings=settings, working_dir=working_dir, wait_for_completion=wait_for_completion)
+        return self.run_shell_command_raw(command, _C, stdin=stdin, settings=settings, working_dir=working_dir, wait_for_completion=wait_for_completion, root_dir=root_dir)
 
     def run_shell_command_raw(self, *args, **kwargs):
 
-        if not 'working_dir' in kwargs:
+        if not 'working_dir' in kwargs or kwargs.get('root_dir'):
             kwargs['working_dir'] = self.get_working_dir(root_dir=kwargs.get('root_dir'))
 
         return OsShell.process(*args, **kwargs)
