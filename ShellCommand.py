@@ -129,11 +129,14 @@ class ShellCommandCommand(SH.TextCommand):
             else:
                 _on_input_end({})
 
-    def run_shell_command(self, command=None, stdin=None, panel=False, title=None, syntax=None, refresh=False, console=None, working_dir=None, wait_for_completion=None, root_dir=False):
+    def run_shell_command(self, command=None, *args, **kwargs):
+
+        
 
         view = self.view
         window = view.window()
         settings = sublime.load_settings('ShellCommand.sublime-settings')
+
 
         if command is None:
             sublime.message_dialog('No command provided.')
@@ -159,6 +162,16 @@ class ShellCommandCommand(SH.TextCommand):
         #
         scroll_show_maximum_output = settings.get('comint-scroll-show-maximum-output')
 
+        if not 'working_dir' in kwargs:
+            kwargs['working_dir'] = None
+
+        if not 'console' in kwargs:
+            kwargs['console'] = None
+
+
+        if kwargs['working_dir'] == None or kwargs.get('root_dir'):
+                kwargs['working_dir'] = self.get_working_dir(root_dir=kwargs.get('root_dir'))
+
         def _C(output):
 
             # If output is None then the command has finished:
@@ -175,7 +188,7 @@ class ShellCommandCommand(SH.TextCommand):
 
                 # Check whether the initiating view needs refreshing:
                 #
-                if refresh is True:
+                if kwargs['refresh'] is True:
                     view.run_command('shell_command_refresh')
 
                 # Stop the progress bar:
@@ -197,11 +210,11 @@ class ShellCommandCommand(SH.TextCommand):
                         self.output_target = SH.OutputTarget(window,
                                                              self.data_key,
                                                              command,
-                                                             working_dir,
-                                                             title=title,
-                                                             syntax=syntax,
-                                                             panel=panel,
-                                                             console=console)
+                                                             kwargs['working_dir'],
+                                                             title=kwargs['title'],
+                                                             syntax=kwargs['syntax'],
+                                                             panel=kwargs['panel'],
+                                                             console=kwargs['console'])
 
                         # Switch our progress bar to the new window:
                         #
@@ -217,14 +230,7 @@ class ShellCommandCommand(SH.TextCommand):
                     self.output_target.append_text(output, scroll_show_maximum_output=scroll_show_maximum_output)
                     self.output_written = True
 
-        return self.run_shell_command_raw(command, _C, stdin=stdin, settings=settings, working_dir=working_dir, wait_for_completion=wait_for_completion, root_dir=root_dir)
-
-    def run_shell_command_raw(self, *args, **kwargs):
-
-        if not 'working_dir' in kwargs or kwargs.get('root_dir'):
-            kwargs['working_dir'] = self.get_working_dir(root_dir=kwargs.get('root_dir'))
-
-        return OsShell.process(*args, **kwargs)
+        return OsShell.process(command, _C, *args, **kwargs) 
 
 class ShellCommandOnRegionCommand(ShellCommandCommand):
 
