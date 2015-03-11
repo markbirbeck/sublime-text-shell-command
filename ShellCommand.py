@@ -131,8 +131,22 @@ class ShellCommandCommand(SH.TextCommand):
 
     def run_shell_command(self, command=None, stdin=None, panel=False, title=None, syntax=None, refresh=False, console=None, working_dir=None, wait_for_completion=None, root_dir=False):
 
+        # Find a window to attach any prompts, panels and new views to.
+        # If view that was active when the command was run has a window
+        # then we can use that:
+        #
         view = self.view
-        window = view.window()
+        if view is not None:
+            window = view.window()
+
+        # But if the view doesn't have a window, or there is no view at
+        # all, then use the active window and view as set in the Sublime
+        # module:
+        #
+        if view is None or window is None:
+            window = sublime.active_window()
+            view = window.active_view()
+
         settings = sublime.load_settings('ShellCommand.sublime-settings')
 
         if command is None:
