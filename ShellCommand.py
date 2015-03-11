@@ -141,6 +141,9 @@ class ShellCommandCommand(SH.TextCommand):
             sublime.message_dialog('No command provided.')
             return
 
+        if working_dir is None:
+            working_dir = self.get_working_dir(root_dir=root_dir)
+
         # Run the command and write any output to the buffer:
         #
         message = self.default_prompt + ': (' + ''.join(command)[:20] + ')'
