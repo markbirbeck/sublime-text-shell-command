@@ -226,8 +226,7 @@ class ShellCommandCommand(SH.TextCommand):
 
     def run_shell_command_raw(self, *args, **kwargs):
 
-        if kwargs['working_dir'] is None:
-            kwargs['working_dir'] = self.get_working_dir(root_dir=kwargs.get('root_dir'))
+        '''Give external modules access to the core processing method.'''
 
         return OsShell.process(*args, **kwargs)
 
