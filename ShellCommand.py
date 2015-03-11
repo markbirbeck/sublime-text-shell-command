@@ -18,6 +18,8 @@ class ShellCommandCommand(SH.TextCommand):
 
     def run(self, edit, command=None, command_prefix=None, prompt=None, region=None, arg_required=None, stdin=None, panel=None, title=None, syntax=None, refresh=None, wait_for_completion=None, root_dir=False):
 
+        view, window = self.get_view_and_window()
+
         # Map previous use of 'region' parameter:
         #
         if region is True:
@@ -75,7 +77,7 @@ class ShellCommandCommand(SH.TextCommand):
         if command is None:
             if prompt is None:
                 prompt = self.default_prompt
-            self.view.window().show_input_panel(prompt, '', _C, None, None)
+            window.show_input_panel(prompt, '', _C, None, None)
         else:
             # A command can contain variables for substitution. The actual
             # substitution takes place in the module VariableSubstitution,
@@ -84,7 +86,7 @@ class ShellCommandCommand(SH.TextCommand):
             #
             from . import VariableSubstitution as VS
 
-            asks, templates = VS.parse_command(command, self.view)
+            asks, templates = VS.parse_command(command, view)
             argdict = {}
 
             def _on_input_end(argdict):
@@ -120,7 +122,7 @@ class ShellCommandCommand(SH.TextCommand):
 
                 def _run():
                     ask = askstack.pop(0)
-                    self.view.window().show_input_panel(ask['message'],
+                    window.show_input_panel(ask['message'],
                         ask['default'], _on_done, None, _on_cancel)
                 _run()
 
@@ -131,8 +133,8 @@ class ShellCommandCommand(SH.TextCommand):
 
     def run_shell_command(self, command=None, stdin=None, panel=False, title=None, syntax=None, refresh=False, console=None, working_dir=None, wait_for_completion=None, root_dir=False):
 
-        view = self.view
-        window = view.window()
+        view, window = self.get_view_and_window()
+
         settings = sublime.load_settings('ShellCommand.sublime-settings')
 
         if command is None:
@@ -239,7 +241,7 @@ class ShellCommandRefreshCommand(ShellCommandCommand):
 
     def run(self, edit, callback=None):
 
-        console = self.view
+        console, window = self.get_view_and_window()
 
         settings = console.settings()
         if settings.has(self.data_key):
