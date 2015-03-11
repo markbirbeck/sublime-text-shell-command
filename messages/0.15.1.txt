@@ -1,0 +1,3 @@
+Version 0.15.1 Release Notes
+
+Fixed an additional scenario relating to generated views having a CWD of `None`. This affects 'modes' such as [Git Mode](markbirbeck/sublime-text-gitmode).
