@@ -1,1 +1,3 @@
 Thanks for installing the ShellCommand plugin for Sublime Text.
+
+If you're interested in creating 'modes' that combine a set of commands, outputs and syntaxes then take a look at [Git Mode](markbirbeck/sublime-text-gitmode).

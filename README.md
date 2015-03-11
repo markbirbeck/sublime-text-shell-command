@@ -322,6 +322,12 @@ By default long-running commands will update the buffer as and when data is avai
 
 # Changelog
 
+2015-03-11 (v0.15.0)
+
+Commands run from generated views no longer always have CWD of `None`. Fixes #47.
+
+`root_dir` is now working again. (@Stentor) Fixes #45.
+
 2015-02-13 (v0.14.0)
 
 Added option to allow the shell used to be overridden. Closes issue #32.
