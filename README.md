@@ -322,6 +322,10 @@ By default long-running commands will update the buffer as and when data is avai
 
 # Changelog
 
+2015-03-11 (v0.15.1)
+
+Fixed an additional scenario relating to issue #47, where generated views could have a CWD of `None`. Fixes #47.
+
 2015-03-11 (v0.15.0)
 
 Commands run from generated views no longer always have CWD of `None`. Fixes #47.
