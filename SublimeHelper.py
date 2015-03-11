@@ -41,8 +41,7 @@ class TextCommand(sublime_plugin.TextCommand):
 
         value = ''
 
-        if view is None:
-            view = self.view
+        view, window = self.get_view_and_window(view)
 
         # If there is no view then all bets are off:
         #
@@ -77,7 +76,7 @@ class TextCommand(sublime_plugin.TextCommand):
     def get_working_dir(self, root_dir=False):
         '''Get the view's current working directory.'''
 
-        view = self.view
+        view, window = self.get_view_and_window()
 
         if view is not None:
 
@@ -97,7 +96,6 @@ class TextCommand(sublime_plugin.TextCommand):
                         if 'working_dir' in data:
                             folders.append(data['working_dir'])
 
-            window = view.window()
             if window is not None:
 
                 # If there is a project file in the window then use it to work
