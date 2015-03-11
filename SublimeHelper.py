@@ -93,7 +93,7 @@ class TextCommand(sublime_plugin.TextCommand):
                 if settings.has(self.data_key):
                     data = settings.get(self.data_key + '_data', None)
                     if data is not None:
-                        if 'working_dir' in data:
+                        if 'working_dir' in data and data['working_dir'] is not None:
                             folders.append(data['working_dir'])
 
             if window is not None:
