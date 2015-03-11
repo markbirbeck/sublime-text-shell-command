@@ -14,6 +14,28 @@ def main_thread(callback, *args, **kwargs):
 
 class TextCommand(sublime_plugin.TextCommand):
 
+    def get_view_and_window(self, view=None):
+
+        # Find a window to attach any prompts, panels and new views to.
+        # If view that was active when the command was run has a window
+        # then we can use that:
+        #
+        if view is None:
+            view = self.view
+
+        if view is not None:
+            window = view.window()
+
+        # But if the view doesn't have a window, or there is no view at
+        # all, then use the active window and view as set in the Sublime
+        # module:
+        #
+        if view is None or window is None:
+            window = sublime.active_window()
+            view = window.active_view()
+
+        return view, window
+
     def get_region(self, view=None, can_select_entire_buffer=False):
         '''Get the value under the cursor, or cursors.'''
 
