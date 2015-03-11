@@ -14,13 +14,34 @@ def main_thread(callback, *args, **kwargs):
 
 class TextCommand(sublime_plugin.TextCommand):
 
+    def get_view_and_window(self, view=None):
+
+        # Find a window to attach any prompts, panels and new views to.
+        # If view that was active when the command was run has a window
+        # then we can use that:
+        #
+        if view is None:
+            view = self.view
+
+        if view is not None:
+            window = view.window()
+
+        # But if the view doesn't have a window, or there is no view at
+        # all, then use the active window and view as set in the Sublime
+        # module:
+        #
+        if view is None or window is None:
+            window = sublime.active_window()
+            view = window.active_view()
+
+        return view, window
+
     def get_region(self, view=None, can_select_entire_buffer=False):
         '''Get the value under the cursor, or cursors.'''
 
         value = ''
 
-        if view is None:
-            view = self.view
+        view, window = self.get_view_and_window(view)
 
         # If there is no view then all bets are off:
         #
@@ -55,7 +76,7 @@ class TextCommand(sublime_plugin.TextCommand):
     def get_working_dir(self, root_dir=False):
         '''Get the view's current working directory.'''
 
-        view = self.view
+        view, window = self.get_view_and_window()
 
         if view is not None:
 
@@ -72,10 +93,9 @@ class TextCommand(sublime_plugin.TextCommand):
                 if settings.has(self.data_key):
                     data = settings.get(self.data_key + '_data', None)
                     if data is not None:
-                        if 'working_dir' in data:
+                        if 'working_dir' in data and data['working_dir'] is not None:
                             folders.append(data['working_dir'])
 
-            window = view.window()
             if window is not None:
 
                 # If there is a project file in the window then use it to work

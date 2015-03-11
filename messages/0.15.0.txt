@@ -1,0 +1,5 @@
+Version 0.15.0 Release Notes
+
+Fixed an issue where commands run from generated views no longer always have CWD of `None`. This affects 'modes' such as [Git Mode](markbirbeck/sublime-text-gitmode).
+
+The `root_dir` option was broken, but thanks to @Stentor is now working again.
