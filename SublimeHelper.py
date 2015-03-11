@@ -124,10 +124,17 @@ class TextCommand(sublime_plugin.TextCommand):
                 #
                 for folder in folders:
                     commonprefix = os.path.commonprefix([folder, dirname])
+
+                    # If we want the root directory then the match must be against
+                    # the folder:
+                    #
                     if root_dir is True:
                         if commonprefix == folder:
                             return folder
                     else:
+                        # If we're not bothered about the root then the match must
+                        # be against the file's directory:
+                        #
                         if commonprefix == dirname:
                             return dirname
 
