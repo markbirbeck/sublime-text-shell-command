@@ -55,7 +55,7 @@ class ShellCommandCommand(SH.TextCommand):
 
         # Setup a closure to run the command:
         #
-        def _C(commands):
+        def _C1(commands):
 
             if not isinstance(commands, list):
                 commands = [commands]
@@ -77,7 +77,7 @@ class ShellCommandCommand(SH.TextCommand):
         if command is None:
             if prompt is None:
                 prompt = self.default_prompt
-            window.show_input_panel(prompt, '', _C, None, None)
+            window.show_input_panel(prompt, '', _C1, None, None)
         else:
             # A command can contain variables for substitution. The actual
             # substitution takes place in the module VariableSubstitution,
@@ -102,7 +102,7 @@ class ShellCommandCommand(SH.TextCommand):
 
                 # Now we're finally ready to run the command:
                 #
-                _C(argstr)
+                _C1(argstr)
 
             def _ask_to_user(asks, callback):
                 askstack = asks[:]
@@ -164,7 +164,7 @@ class ShellCommandCommand(SH.TextCommand):
         #
         scroll_show_maximum_output = settings.get('comint-scroll-show-maximum-output')
 
-        def _C(output):
+        def _C2(output):
 
             # If output is None then the command has finished:
             #
@@ -222,7 +222,7 @@ class ShellCommandCommand(SH.TextCommand):
                     self.output_target.append_text(output, scroll_show_maximum_output=scroll_show_maximum_output)
                     self.output_written = True
 
-        return self.run_shell_command_raw(command, _C, stdin=stdin, settings=settings, working_dir=working_dir, wait_for_completion=wait_for_completion, root_dir=root_dir)
+        return self.run_shell_command_raw(command, _C2, stdin=stdin, settings=settings, working_dir=working_dir, wait_for_completion=wait_for_completion, root_dir=root_dir)
 
     def run_shell_command_raw(self, *args, **kwargs):
 
