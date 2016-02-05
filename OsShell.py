@@ -70,7 +70,7 @@ def _process(commands, callback=None, stdin=None, settings=None, working_dir=Non
             bash_env = os.getenv('ENV')
 
         if bash_env is not None:
-            command = '. {} && {}'.format(bash_env, command)
+            command = '. {}; {}'.format(bash_env, command)
 
         # Work out whether the executable is being overridden in the
         # configuration settings or an environment variable:
