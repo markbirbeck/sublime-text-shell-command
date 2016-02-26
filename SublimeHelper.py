@@ -179,7 +179,11 @@ class SublimeHelperClearBufferCommand(sublime_plugin.TextCommand):
 
 class OutputTarget():
 
-    def __init__(self, window, data_key, command, working_dir, title=None, syntax=None, panel=False, console=None):
+    def __init__(self, window, data_key, command, working_dir, title=None, syntax=None, panel=False, console=None, target=None):
+
+        self.target = target
+        if target == 'point' and console is None:
+            console = window.active_view()
 
         # If a panel has been requested then create one and show it,
         # otherwise create a new buffer, and set its caption:
@@ -230,11 +234,25 @@ class OutputTarget():
         if is_read_only:
             console.set_read_only(False)
 
+        # If the target is 'point' then the insertion point is the current
+        # cursor position, overwriting any selection there might be:
+        #
+        if self.target == 'point':
+            sel = console.sel()[0]
+            if not sel.empty():
+                console.run_command('sublime_helper_erase_text', {'a': sel.begin(), 'b': sel.end()})
+            pos = sel.begin()
+
+        # If the target is not 'point' the the insertion point is the end
+        # of the buffer:
+        #
+        else:
+            pos = console.size()
+
         # Insert the output into the buffer. If the flag is set to show maximum output
         # then we make the end of the buffer visible:
         #
-        console.set_read_only(False)
-        console.run_command('sublime_helper_insert_text', {'pos': console.size(), 'msg': output})
+        console.run_command('sublime_helper_insert_text', {'pos': pos, 'msg': output})
         if scroll_show_maximum_output:
             console.run_command('move_to', {'to': 'eof', 'extend': False})
 
