@@ -16,7 +16,7 @@ class ShellCommandCommand(SH.TextCommand):
         self.data_key = 'ShellCommand'
         self.output_written = False
 
-    def run(self, edit, command=None, command_prefix=None, prompt=None, region=None, arg_required=None, stdin=None, panel=None, title=None, syntax=None, refresh=None, wait_for_completion=None, root_dir=False):
+    def run(self, edit, command=None, command_prefix=None, prompt=None, region=None, arg_required=None, stdin=None, panel=None, target=None, title=None, syntax=None, refresh=None, wait_for_completion=None, root_dir=False):
 
         view, window = self.get_view_and_window()
 
@@ -69,7 +69,7 @@ class ShellCommandCommand(SH.TextCommand):
 
                 commands[idx] = command
 
-            self.run_shell_command(commands, stdin=stdin, panel=panel, title=title, syntax=syntax, refresh=refresh, wait_for_completion=wait_for_completion, root_dir=root_dir)
+            self.run_shell_command(commands, stdin=stdin, panel=panel, target=target, title=title, syntax=syntax, refresh=refresh, wait_for_completion=wait_for_completion, root_dir=root_dir)
 
         # If no command is specified then we prompt for one, otherwise
         # we can just execute the command:
@@ -131,7 +131,7 @@ class ShellCommandCommand(SH.TextCommand):
             else:
                 _on_input_end({})
 
-    def run_shell_command(self, command=None, stdin=None, panel=False, title=None, syntax=None, refresh=False, console=None, working_dir=None, wait_for_completion=None, root_dir=False):
+    def run_shell_command(self, command=None, stdin=None, panel=False, target=None, title=None, syntax=None, refresh=False, console=None, working_dir=None, wait_for_completion=None, root_dir=False):
 
         view, window = self.get_view_and_window()
 
@@ -206,7 +206,8 @@ class ShellCommandCommand(SH.TextCommand):
                                                              title=title,
                                                              syntax=syntax,
                                                              panel=panel,
-                                                             console=console)
+                                                             console=console,
+                                                             target=target)
 
                         # Switch our progress bar to the new window:
                         #
@@ -232,9 +233,9 @@ class ShellCommandCommand(SH.TextCommand):
 
 class ShellCommandOnRegionCommand(ShellCommandCommand):
 
-    def run(self, edit, command=None, command_prefix=None, prompt=None, arg_required=None, panel=None, title=None, syntax=None, refresh=None):
+    def run(self, edit, command=None, command_prefix=None, prompt=None, arg_required=None, panel=None, target=None, title=None, syntax=None, refresh=None):
 
-        ShellCommandCommand.run(self, edit, command=command, command_prefix=command_prefix, prompt=prompt, region='stdin', arg_required=True, panel=panel, title=title, syntax=syntax, refresh=refresh)
+        ShellCommandCommand.run(self, edit, command=command, command_prefix=command_prefix, prompt=prompt, region='stdin', arg_required=True, panel=panel, target=target, title=title, syntax=syntax, refresh=refresh)
 
 
 # Refreshing a shell command simply involves re-running the original command:

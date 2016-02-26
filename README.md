@@ -31,6 +31,8 @@ The built-in bindings are based on similar functionality for Emacs (see [Execute
 
 * `alt+!` will show a prompt into which a shell command can be typed;
 * `alt+|` will also show a prompt, but will use any selections or text under the cursor (or the current file if nothing is selected) as standard input to the shell command (i.e., `stdin`);
+* `ctrl+alt+!` will do the same as `alt+!` but instead of sending the result to a new buffer, the result will be placed in the current document at the cursor position;
+* `ctrl+alt+|` will do the same as `alt+|` but instead of sending the result to a new buffer, the result will overwrite the selected text in the current document (i.e., the text that was used as input to the command);
 * `g` in a view that is showing the output of a shell command will cause the command to be run again.
 
 In addition to this it's possible to customise the behaviour for many different scenarios.
@@ -114,6 +116,24 @@ Using these arguments the caption next to the prompt can be changed, as well as 
 ```
 
 Often the output of a command is only required for a short amount of time, in which case a panel might be more appropriate.
+
+## Capturing output in the current buffer
+
+```json
+[
+  {
+    "keys": ["ctrl+enter"],
+    "command": "shell_command",
+    "args": {
+      "prompt": "Enter a command",
+      "title": "My Command",
+      "target": "panel"
+    }
+  }
+]
+```
+
+Sometimes the output of a command should be inserted into the document being edited. Setting the `target` argument to `point` achieves this. If there is a region selected then this is overwritten.
 
 ## Run a specific command
 

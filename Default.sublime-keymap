@@ -1,11 +1,33 @@
 [
   {
     /**
+     * Emulate Emacs' C-u M-!
+     */
+
+    "keys": ["ctrl+alt+shift+1"],
+    "command": "shell_command",
+    "args": {
+      "target": "point"
+    }
+  },
+  {
+    /**
      * Emulate Emacs' M-!
      */
 
     "keys": ["alt+shift+1"],
     "command": "shell_command"
+  },
+  {
+    /**
+     * Emulate Emacs' C-u M-|
+     */
+
+    "keys": ["ctrl+alt+shift+\\"],
+    "command": "shell_command_on_region",
+    "args": {
+      "target": "point"
+    }
   },
   {
     /**
