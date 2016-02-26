@@ -224,6 +224,12 @@ class OutputTarget():
 
         console = self.console
 
+        # If the buffer is read only then temporarily disable that:
+        #
+        is_read_only = console.is_read_only()
+        if is_read_only:
+            console.set_read_only(False)
+
         # Insert the output into the buffer. If the flag is set to show maximum output
         # then we make the end of the buffer visible:
         #
@@ -231,7 +237,11 @@ class OutputTarget():
         console.run_command('sublime_helper_insert_text', {'pos': console.size(), 'msg': output})
         if scroll_show_maximum_output:
             console.run_command('move_to', {'to': 'eof', 'extend': False})
-        console.set_read_only(True)
+
+        # Set read only back again if necessary:
+        #
+        if is_read_only:
+            console.set_read_only(True)
 
     def set_status(self, tag, message):
 
