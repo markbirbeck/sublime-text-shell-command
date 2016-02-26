@@ -342,6 +342,12 @@ By default long-running commands will update the buffer as and when data is avai
 
 # Changelog
 
+## 2016-02-26 (v0.16.0)
+
+Fixed problem where output buffers were always being set to read only. This is only relevant when writing to the buffer being edited. Fixes #51.
+
+Allow the output of a command to overwrite the region used as input. Closes #9.
+
 ## 2016-02-05 (v0.15.2)
 
 Fixed problem where a failing configuration script would prevent any command from running. Fixes #50.
