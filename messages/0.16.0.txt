@@ -1,0 +1,5 @@
+Version 0.16.0 Release Notes
+
+Fixed problem where output buffers were always being set to read only. This is only relevant when writing to the buffer being edited. Fixes #51.
+
+Allow the output of a command to overwrite the region used as input. Closes #9.
