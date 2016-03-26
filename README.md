@@ -127,7 +127,7 @@ Often the output of a command is only required for a short amount of time, in wh
     "args": {
       "prompt": "Enter a command",
       "title": "My Command",
-      "target": "panel"
+      "target": "point"
     }
   }
 ]
