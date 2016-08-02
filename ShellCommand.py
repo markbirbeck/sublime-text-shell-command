@@ -2,6 +2,7 @@ import sublime
 
 from . import SublimeHelper as SH
 from . import OsShell
+from .hist import history
 
 
 class ShellCommandCommand(SH.TextCommand):
@@ -69,6 +70,7 @@ class ShellCommandCommand(SH.TextCommand):
 
                 commands[idx] = command
 
+            history.insert('; '.join(commands))
             self.run_shell_command(commands, stdin=stdin, panel=panel, target=target, title=title, syntax=syntax, refresh=refresh, wait_for_completion=wait_for_completion, root_dir=root_dir)
 
         # If no command is specified then we prompt for one, otherwise
@@ -77,7 +79,9 @@ class ShellCommandCommand(SH.TextCommand):
         if command is None:
             if prompt is None:
                 prompt = self.default_prompt
-            window.show_input_panel(prompt, '', _C1, None, None)
+            initial = history.last()
+            panel = window.show_input_panel(prompt, initial, _C1, None, None)
+            panel.settings().set("shell_command_panel", True)
         else:
             # A command can contain variables for substitution. The actual
             # substitution takes place in the module VariableSubstitution,
