@@ -45,5 +45,26 @@
     "keys": ["g"],
     "command": "shell_command_refresh",
     "context": [{ "key": "setting.ShellCommand" }]
+  },
+
+
+  {
+    "keys": ["up"], "command": "shell_command_history",
+    "args": {
+      "backwards": true
+    },
+    "context":
+    [
+      { "key": "setting.shell_command_panel", "operator": "equal", "operand": true }
+    ]
+  },
+
+  {
+    "keys": ["down"], "command": "shell_command_history",
+    "context":
+    [
+      { "key": "setting.shell_command_panel", "operator": "equal", "operand": true }
+    ]
   }
+
 ]
