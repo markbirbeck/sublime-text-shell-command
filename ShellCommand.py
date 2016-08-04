@@ -79,7 +79,7 @@ class ShellCommandCommand(SH.TextCommand):
         if command is None:
             if prompt is None:
                 prompt = self.default_prompt
-            initial = history.last()
+            initial = history.last() or ''
             panel = window.show_input_panel(prompt, initial, _C1, None, None)
             panel.settings().set("shell_command_panel", True)
         else:
