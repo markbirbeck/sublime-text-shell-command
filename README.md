@@ -186,18 +186,18 @@ There are a number of predefined variables that you can pass to command (eg. cur
 
 |Variable|Value example|
 |---|---|
-|${file}|/var/www/index.html
-|${file_path}|/var/www
-|${file_name}|index.html
-|${file_extension}|.html
-|${file_base_name}|index
-|${packages}|/home/andrew/.config/sublime-text-3/Packages
-|${project}|/var/www/my-project.sublime-project
-|${project_path}|/var/www
-|${project_name}|my-project.sublime-project
-|${project_extension}|.sublime-project
-|${project_base_name}|my-project
-|${project_folders}|/var/www
+|${file}|/var/www/index.html|
+|${file_path}|/var/www|
+|${file_name}|index.html|
+|${file_extension}|.html|
+|${file_base_name}|index|
+|${packages}|/home/andrew/.config/sublime-text-3/Packages|
+|${project}|/var/www/my-project.sublime-project|
+|${project_path}|/var/www|
+|${project_name}|my-project.sublime-project|
+|${project_extension}|.sublime-project|
+|${project_base_name}|my-project|
+|${project_folders}|/var/www|
 
 ```json
 [
