@@ -217,8 +217,15 @@ class OutputTarget():
             # Set the syntax for the output:
             #
             if syntax is not None:
-                resources = sublime.find_resources(syntax + '.tmLanguage')
-                self.console.set_syntax_file(resources[0])
+                if not (syntax.endswith('.tmLanguage') or
+                    syntax.endswith('.sublime-syntax')):
+                    syntax += '.tmLanguage'
+                resources = sublime.find_resources(syntax)
+
+                if not resources:
+                    print('Resource not found:', syntax)
+                else:
+                    self.console.set_syntax_file(resources[0])
 
             # Set a flag on the view that we can use in key bindings:
             #
