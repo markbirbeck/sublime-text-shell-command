@@ -2,6 +2,7 @@
 #
 import functools
 import os
+import queue
 
 import sublime
 import sublime_plugin
@@ -155,6 +156,8 @@ class SublimeHelperInsertTextCommand(sublime_plugin.TextCommand):
     def run(self, edit, pos, msg):
 
         if msg is not None:
+            if pos == -1:
+                pos = self.view.size()
             self.view.insert(edit, pos, msg)
 
 
@@ -180,6 +183,9 @@ class SublimeHelperClearBufferCommand(sublime_plugin.TextCommand):
 class OutputTarget():
 
     def __init__(self, window, data_key, command, working_dir, title=None, syntax=None, panel=False, console=None, target=None):
+
+        self.queue = queue.Queue()
+        self.in_progress = False
 
         self.target = target
         if target == 'point' and console is None:
@@ -247,19 +253,39 @@ class OutputTarget():
         # of the buffer:
         #
         else:
-            pos = console.size()
+            pos = -1
 
-        # Insert the output into the buffer. If the flag is set to show maximum output
-        # then we make the end of the buffer visible:
+        # We don't write directly, but instead place our text into a queue:
         #
-        console.run_command('sublime_helper_insert_text', {'pos': pos, 'msg': output})
-        if scroll_show_maximum_output:
-            console.run_command('move_to', {'to': 'eof', 'extend': False})
+        # Then we kick off a timer to drain the queue and insert our text:
+        #
+        def _T():
+            try:
+                # Insert the output into the buffer:
+                #
+                [pos, output] = self.queue.get_nowait()
+                sublime.set_timeout(lambda: console.run_command('sublime_helper_insert_text', {'pos': pos, 'msg': output}), 0)
+                self.queue.task_done()
+                sublime.set_timeout(_T, 0)
 
-        # Set read only back again if necessary:
-        #
-        if is_read_only:
-            console.set_read_only(True)
+            except queue.Empty:
+                print('Queue is empty')
+                self.in_progress = False
+
+                # If the flag is set to show maximum output then we make the end of the buffer visible:
+                #
+                if scroll_show_maximum_output:
+                    console.run_command('move_to', {'to': 'eof', 'extend': False})
+
+                # Set read only back again if necessary:
+                #
+                if is_read_only:
+                    console.set_read_only(True)
+
+        self.queue.put_nowait([pos, output])
+        if not self.in_progress:
+            self.in_progress = True
+            _T()
 
     def set_status(self, tag, message):
 
