@@ -213,7 +213,8 @@ class OutputTarget():
                 resources = sublime.find_resources(syntax)
 
                 if not resources:
-                    print('Ressource not found:', syntax)
+                    print('No ressource found matching "%s". Using it as full syntax path.' % syntax)
+                    self.console.set_syntax_file(syntax)
                 else:
                     self.console.set_syntax_file(resources[0])
 
