@@ -180,12 +180,16 @@ class SublimeHelperClearBufferCommand(sublime_plugin.TextCommand):
         view.run_command('sublime_helper_erase_text', {'a': 0, 'b': view.size()})
 
 
+class TimeoutStateEnum:
+    Stopped, Started, Abort = range(3)
+
+
 class OutputTarget():
 
     def __init__(self, window, data_key, command, working_dir, title=None, syntax=None, panel=False, console=None, target=None):
 
         self.queue = queue.Queue()
-        self.in_progress = False
+        self.set_timer_status = TimeoutStateEnum.Stopped
 
         self.target = target
         if target == 'point' and console is None:
@@ -260,32 +264,49 @@ class OutputTarget():
         # Then we kick off a timer to drain the queue and insert our text:
         #
         def _T():
-            try:
+            # If the status is 'Started' then ignore the processing and set a new timer:
+            #
+            if self.set_timer_status == TimeoutStateEnum.Abort:
+                self.set_timer_status = TimeoutStateEnum.Started
+                sublime.set_timeout_async(_T, 100)
+            else:
                 # Insert the output into the buffer:
                 #
-                [pos, output] = self.queue.get_nowait()
-                sublime.set_timeout(lambda: console.run_command('sublime_helper_insert_text', {'pos': pos, 'msg': output}), 0)
-                self.queue.task_done()
-                sublime.set_timeout(_T, 0)
+                buf = ''
+                while self.set_timer_status == TimeoutStateEnum.Started:
+                    try:
+                        [pos, output] = self.queue.get_nowait()
+                        self.queue.task_done()
+                        buf += output
+                    except queue.Empty:
+                        self.set_timer_status = TimeoutStateEnum.Stopped
+                        pos = -1
+                        output = buf
 
-            except queue.Empty:
-                print('Queue is empty')
-                self.in_progress = False
+                        console.run_command('sublime_helper_insert_text', {'pos': pos, 'msg': output})
 
-                # If the flag is set to show maximum output then we make the end of the buffer visible:
-                #
-                if scroll_show_maximum_output:
-                    console.run_command('move_to', {'to': 'eof', 'extend': False})
+                        # If the flag is set to show maximum output then we make the end of the buffer visible:
+                        #
+                        if scroll_show_maximum_output:
+                            console.run_command('move_to', {'to': 'eof', 'extend': False})
 
-                # Set read only back again if necessary:
-                #
-                if is_read_only:
-                    console.set_read_only(True)
+                        # Set read only back again if necessary:
+                        #
+                        if is_read_only:
+                            console.set_read_only(True)
 
+
+
+        # If we're adding to the end, and the previous item did as well, then merge:
+        #
         self.queue.put_nowait([pos, output])
-        if not self.in_progress:
-            self.in_progress = True
-            _T()
+
+        if self.set_timer_status == TimeoutStateEnum.Started:
+            self.set_timer_status = TimeoutStateEnum.Abort
+
+        if self.set_timer_status == TimeoutStateEnum.Stopped:
+            self.set_timer_status = TimeoutStateEnum.Started
+            sublime.set_timeout_async(_T, 100)
 
     def set_status(self, tag, message):
 
