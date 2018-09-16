@@ -108,6 +108,7 @@ def _process(commands, callback=None, stdin=None, settings=None, working_dir=Non
             while return_code is None:
                 return_code = proc.poll()
 
+
                 # If there's no error then see what we got from the command:
                 #
                 if return_code is None or return_code == 0:
