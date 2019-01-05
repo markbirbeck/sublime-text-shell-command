@@ -12,6 +12,31 @@ def main_thread(callback, *args, **kwargs):
 
     sublime.set_timeout_async(functools.partial(callback, *args, **kwargs), 0)
 
+# Work out the name of a syntax file when we may only know the syntax:
+#
+def get_syntax_file(syntax):
+    # First try to find the resource using the provided string:
+    #
+    resources = sublime.find_resources(syntax)
+
+    # If there is no match, then try with the newer .sublime-syntax
+    # extension:
+    #
+    if not resources:
+        resources = sublime.find_resources(syntax + '.sublime-syntax')
+
+    # If there is still no match then try for the older .tmLanguage extension:
+    #
+    if not resources:
+        resources = sublime.find_resources(syntax + '.tmLanguage')
+
+    # If none of these approaches found a syntax file then throw an error, since
+    # the user obviously wanted something:
+    #
+    if not resources:
+        raise Exception('No resource found matching "%s".' % syntax)
+    else:
+        return resources[0]
 
 class TextCommand(sublime_plugin.TextCommand):
 
@@ -217,16 +242,8 @@ class OutputTarget():
             # Set the syntax for the output:
             #
             if syntax is not None:
-                if not (syntax.endswith('.tmLanguage') or
-                    syntax.endswith('.sublime-syntax')):
-                    syntax += '.tmLanguage'
-                resources = sublime.find_resources(syntax)
-
-                if not resources:
-                    print('No resource found matching "%s". Using it as full syntax path.' % syntax)
-                    self.console.set_syntax_file(syntax)
-                else:
-                    self.console.set_syntax_file(resources[0])
+                syntax_file = get_syntax_file(syntax)
+                self.console.set_syntax_file(syntax_file)
 
             # Set a flag on the view that we can use in key bindings:
             #

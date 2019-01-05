@@ -1,0 +1,7 @@
+Version 0.17.0 Release Notes
+
+Lots of changes have been sitting unpublished on GitHub...sorry about that!
+
+Make the output of long-running tasks smoother. Closes #68. (@markbirbeck)
+Add support for history of commands. Closes #27. (@kaste)
+Support new syntax definition styles when using syntax option. Closes #74. (@gwenzek) 
