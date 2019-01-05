@@ -293,7 +293,9 @@ To pass a string of text to a command use the `stdin` argument.
 ]
 ```
 
-This will run `git diff` against whatever file is selected, and then use the `Diff` syntax file (`Packages/Diff/Diff.tmLanguage`) to format the output.
+This will run `git diff` against whatever file is selected, and then use the `Diff` syntax file (`Packages/Diff/Diff.sublime-syntax`) to format the output.
+
+The value of the `syntax` property can be a full path to a syntax file, a file name without a path, but with a file extension, or a syntax name without a file extension (as in the above example). If the value specified is not found when treated as a path then `ShellCommand` will append a suffix of `.sublime-syntax` and try again. If there is still no match, a suffix of `.tmLanguage` will be tried, before finally, an error is reported.
 
 ## Restricting key bindings to a shell command view
 
