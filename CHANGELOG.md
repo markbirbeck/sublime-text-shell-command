@@ -7,6 +7,12 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 ## [Unreleased]
 
+## [0.17.0] - 2019-01-05
+### Added
+- Make the output of long-running tasks smoother. Closes #68. (@markbirbeck)
+- Add support for history of commands. Closes #27. (@kaste)
+- Support new syntax definition styles when using syntax option. Closes #74. (@gwenzek)
+
 ## [0.16.0] - 2016-02-26
 ### Added
 - Allow the output of a command to overwrite the region used as input. Closes #9.
@@ -120,7 +126,8 @@ Fixed problem where a failing configuration script would prevent any command fro
 ### Added
 - Initial release.
 
-[Unreleased]: https://github.com/markbirbeck/sublime-text-shell-command/compare/v0.16.0...HEAD
+[Unreleased]: https://github.com/markbirbeck/sublime-text-shell-command/compare/v0.17.0...HEAD
+[0.17.0]: https://github.com/markbirbeck/sublime-text-shell-command/compare/v0.16.0...v0.17.0
 [0.16.0]: https://github.com/markbirbeck/sublime-text-shell-command/compare/v0.15.2...v0.16.0
 [0.15.2]: https://github.com/markbirbeck/sublime-text-shell-command/compare/v0.15.1...v0.15.2
 [0.15.1]: https://github.com/markbirbeck/sublime-text-shell-command/compare/v0.15.0...v0.15.1
