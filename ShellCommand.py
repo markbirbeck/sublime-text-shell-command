@@ -80,8 +80,8 @@ class ShellCommandCommand(SH.TextCommand):
             if prompt is None:
                 prompt = self.default_prompt
             initial = history.last() or ''
-            panel = window.show_input_panel(prompt, initial, _C1, None, None)
-            panel.settings().set("shell_command_panel", True)
+            input_panel = window.show_input_panel(prompt, initial, _C1, None, None)
+            input_panel.settings().set("shell_command_panel", True)
         else:
             # A command can contain variables for substitution. The actual
             # substitution takes place in the module VariableSubstitution,
