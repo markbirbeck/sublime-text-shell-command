@@ -182,6 +182,7 @@ If a default value is provided (the second value after the variable name) then t
 
 ## Predefined variables
 
+
 There are a number of predefined variables that you can pass to command (eg. current file name, project dir etc.).
 
 |Variable|Value example|
